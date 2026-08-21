@@ -220,7 +220,7 @@ const defaultState={
 let S=clone(defaultState);
 
 const SUPABASE_URL='https://rbxurwwnugmynxiu.supabase.co';
-const SUPABASE_KEY='sb_publishable_bhsKDob6ktLUTJWfXXIG6w_vsItv4f_';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJieHVyandybnVnbXlueGl1endnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNDYyNjEsImV4cCI6MjEwMjkyMjI2MX0.2H3l-9hgkgLn1DTNscfE0QTM1zUUJmp3lqqB_Qhsha8';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 let cloudSaveTimer=null;
@@ -582,12 +582,18 @@ function bind(){
 function toast(msg){let c=document.getElementById('toast');c.innerHTML=`<div class="toast"><b>Honra Conquistada</b><span>${msg}</span></div>`;setTimeout(()=>c.innerHTML='',3500)}
 
 (async function initEliteDash(){
-  const {data}=await supabaseClient.auth.getSession();
-  currentUser=data?.session?.user||null;
-  if(!currentUser){showAuth('login');return;}
-  await loadCloud();
-  checkDailyReset();
-  render('today');
+  try{
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error) throw error;
+    currentUser=data?.session?.user||null;
+    if(!currentUser){showAuth('login');return;}
+    await loadCloud();
+    checkDailyReset();
+    render('today');
+  }catch(err){
+    console.error('EliteDash/Supabase:',err);
+    showAuth('login','Não foi possível conectar ao servidor. Verifique a conexão e tente novamente.');
+  }
 })();
 </script>
 </body>
