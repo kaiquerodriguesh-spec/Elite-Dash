@@ -217,7 +217,7 @@ const defaultState={
  trophies:['Primeiro passo','Semana de consistência','Mestre da rotina']
 };
 
-const SUPABASE_URL='https://rbxurwwnugmynxiu?';
+const SUPABASE_URL='https://rbxurwwnugmynxiu.supabase.co';
 function xpGain(amount,attr){S.player.xp+=amount;if(attr)S.attributes[attr]=Math.min(100,S.attributes[attr]+Math.max(1,Math.round(amount/10)));while(S.player.xp>=S.player.maxXp){S.player.xp-=S.player.maxXp;S.player.level++;S.player.maxXp=Math.floor(S.player.maxXp*1.3);toast('LEVEL UP! Nível '+S.player.level+' alcançado!')}}
 
 const tabs=[
