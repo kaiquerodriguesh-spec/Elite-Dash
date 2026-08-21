@@ -66,52 +66,16 @@ input,select{width:100%;background:#0d0508;color:#fff;border:1px solid var(--bor
 .toast{position:fixed;right:20px;bottom:20px;z-index:999;padding:14px 18px;border-radius:13px;background:#17070c;border:1px solid rgba(251,191,36,.5);box-shadow:0 15px 40px #0009;max-width:340px}.toast b{display:block;color:var(--gold);font:700 .85rem Cinzel,serif}.toast span{font-size:.75rem;color:var(--muted)}
 @media(max-width:900px){.sidebar{width:100%;height:auto;bottom:0;top:auto;border-right:0;border-top:1px solid var(--border);padding:7px}.logo{display:none}.nav{flex-direction:row;justify-content:space-around;overflow:hidden}.nav button{flex-direction:column;gap:2px;padding:6px;font-size:.58rem}.nav button span{display:none}.nav button.active{border-left:0;border-top:3px solid var(--red);padding-top:3px}.main{margin-left:0;padding:20px 18px 90px}.hero-grid{grid-template-columns:1fr}.stat-mini{grid-template-columns:repeat(2,1fr)}}
 
-/* ===== ELITEDASH AUTH / ONLINE SAVE ===== */
-#authGate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(8,10,14,.96);backdrop-filter:blur(10px);padding:20px}
-.auth-card{width:min(440px,100%);background:#12161d;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.55)}
-.auth-card h1{margin:0 0 8px;font-family:Cinzel,serif;font-size:1.7rem}
-.auth-card p{color:#9ca3af;font-size:.9rem;line-height:1.5}
-.auth-field{margin-top:14px}
-.auth-field label{display:block;font-size:.78rem;color:#aeb6c3;margin-bottom:6px}
-.auth-field input{width:100%;box-sizing:border-box;background:#0b0e13;border:1px solid #303744;color:#fff;border-radius:10px;padding:12px}
-.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.auth-msg{min-height:22px;margin-top:14px;font-size:.82rem;color:#cbd5e1}
-.auth-user{position:fixed;right:18px;top:14px;z-index:5000;display:flex;align-items:center;gap:8px;background:rgba(12,16,22,.9);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:7px 9px 7px 12px;box-shadow:0 8px 25px rgba(0,0,0,.25)}
-.auth-user span{font-size:.75rem;color:#cbd5e1;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.auth-user button{border:0;background:#262d38;color:#fff;border-radius:999px;padding:7px 10px;cursor:pointer}
-body.auth-locked{overflow:hidden}
-@media(max-width:600px){.auth-user{right:10px;top:10px}.auth-user span{max-width:120px}}
-
+.auth-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 20%,#3b0b16 0,#100307 55%,#050103 100%);padding:20px}
+.auth-box{width:min(430px,100%);background:rgba(22,9,14,.97);border:1px solid var(--border);border-radius:22px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.55)}
+.auth-box h1{font:800 1.8rem Cinzel,serif;text-align:center;color:#fca5a5}.auth-box p{text-align:center;color:var(--muted);font-size:.85rem;margin:8px 0 22px}.auth-box input{width:100%;margin-bottom:12px;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#090307;color:#fff;outline:none}.auth-box .btn{width:100%;margin-top:4px}.auth-switch{text-align:center;margin-top:14px;color:var(--muted);font-size:.8rem}.auth-switch button{background:none;border:0;color:#fca5a5;text-decoration:underline}.auth-msg{min-height:22px;text-align:center;color:#fca5a5;font-size:.82rem;margin-top:12px}
+.history-list{display:flex;flex-direction:column;gap:10px}.history-day{border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(255,255,255,.025);overflow:hidden}.history-day summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:1fr auto auto;gap:15px;align-items:center;padding:14px 16px}.history-day summary::-webkit-details-marker{display:none}.history-day-content{padding:0 16px 16px;border-top:1px solid rgba(255,255,255,.06)}.history-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.history-stats>div{padding:11px;border-radius:10px;background:rgba(255,255,255,.035)}.history-stats span{display:block;color:var(--muted);font-size:.72rem;margin-bottom:4px}.history-task-groups{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}.history-task-group{border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:11px}.history-task-group h4{margin:0 0 8px;font-size:.82rem}.history-task{display:flex;gap:8px;padding:5px 0;font-size:.78rem}.history-task.pending{opacity:.5}.history-calendar{display:grid;grid-template-columns:repeat(26,1fr);gap:4px}.history-cell{height:16px;border-radius:3px;background:rgba(255,255,255,.035);font-size:8px;text-align:center}.history-cell.partial{background:rgba(245,166,35,.32)}.history-cell.good{background:rgba(46,204,113,.55)}.history-cell.perfect{background:rgba(255,193,7,.85)}.history-cell.current{outline:2px solid #fff;outline-offset:1px}
+@media(max-width:700px){.history-stats{grid-template-columns:repeat(2,1fr)}.history-task-groups{grid-template-columns:1fr}.history-day summary{grid-template-columns:1fr auto}.history-calendar{grid-template-columns:repeat(13,1fr)}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="auth-locked">
-
-<div id="authGate">
-  <div class="auth-card">
-    <div class="badge gold" style="display:inline-block;margin-bottom:12px">☁ ELITEDASH ONLINE</div>
-    <h1>⚔ Entre no seu EliteDash</h1>
-    <p>Seu personagem, XP, Ouro e histórico agora podem ser sincronizados com a nuvem.</p>
-
-    <div class="auth-field">
-      <label>E-mail</label>
-      <input id="authEmail" type="email" autocomplete="email" placeholder="seu@email.com">
-    </div>
-    <div class="auth-field">
-      <label>Senha</label>
-      <input id="authPassword" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres">
-    </div>
-
-    <div class="auth-actions">
-      <button class="btn primary" id="authLogin">Entrar</button>
-      <button class="btn" id="authSignup">Criar conta</button>
-    </div>
-    <div class="auth-msg" id="authMsg"></div>
-  </div>
-</div>
-<div id="authUser" class="auth-user" style="display:none">
-  <span id="authUserEmail"></span>
-  <button id="authLogout">Sair</button>
-</div>
+<body>
+<div id="authOverlay" class="auth-overlay" style="display:none"></div>
 
 <!-- DAILY_REWARD_SYSTEM -->
 <div class="daily-reward-status" id="dailyRewardStatus">
@@ -126,7 +90,6 @@ body.auth-locked{overflow:hidden}
 <main class="main" id="app"></main>
 <div id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 function calculateDailyReward(progress) {
@@ -254,237 +217,17 @@ const defaultState={
  trophies:['Primeiro passo','Semana de consistência','Mestre da rotina']
 };
 
-let S=load();
-function normalizeState(parsed){
-  try{
-    let state = Object.assign(clone(defaultState), parsed || {});
-    if(!state.hygiene) state.hygiene = clone(defaultState.hygiene);
-    if(!state.college) state.college = clone(defaultState.college);
-    if(!state.houseTasks) state.houseTasks = clone(defaultState.houseTasks);
-    if(!state.history) state.history = {};
-    if(!state.quests) state.quests = [];
-    return state;
-  }catch(e){
-    return clone(defaultState);
-  }
-}
-function load(){
-  try{
-    let savedData = localStorage.getItem(KEY);
-
-    // Migração automática: preserva o progresso salvo na versão anterior.
-    if(!savedData){
-      const oldData = localStorage.getItem('eliteMasterDashStateV10');
-      if(oldData){
-        savedData = oldData;
-        try{ localStorage.setItem(KEY, oldData); }catch(e){}
-      }
-    }
-
-    if(!savedData) return clone(defaultState);
-    return normalizeState(JSON.parse(savedData));
-  }catch(e){
-    return clone(defaultState);
-  }
-}
-
-let cloudSaveTimer=null;
-function save(){
-  const payload=JSON.stringify(S);
-  localStorage.setItem(KEY,payload);
-
-  // Sincroniza automaticamente com o banco quando o usuário estiver logado.
-  if(window.currentEliteUser){
-    clearTimeout(cloudSaveTimer);
-    cloudSaveTimer=setTimeout(()=>saveToCloud(),350);
-  }
-}
-
-/* ===== SUPABASE / CONTA ONLINE ===== */
-const SUPABASE_URL='https://rbxurjwrnugmynxiuzwg.supabase.co';
-const SUPABASE_KEY='sb_publishable_bhsKDob6ktLUTJWfXXIG6w_vsItv4f_';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-window.currentEliteUser=null;
-
-function setAuthMessage(msg, ok=false){
-  const el=document.getElementById('authMsg');
-  if(el){el.textContent=msg;el.style.color=ok?'#7dd3a7':'#cbd5e1';}
-}
-function setAuthBusy(busy){
-  ['authLogin','authSignup'].forEach(id=>{
-    const b=document.getElementById(id);
-    if(b){b.disabled=busy;b.style.opacity=busy?.65:1;}
-  });
-}
-
-async function signUpElite(){
-  const email=document.getElementById('authEmail').value.trim();
-  const password=document.getElementById('authPassword').value;
-  if(!email || password.length<6){
-    setAuthMessage('Informe um e-mail válido e uma senha com pelo menos 6 caracteres.');
-    return;
-  }
-  setAuthBusy(true);
-  setAuthMessage('Criando sua conta...');
-  const {data,error}=await sb.auth.signUp({email,password});
-  setAuthBusy(false);
-
-  if(error){
-    setAuthMessage(error.message);
-    return;
-  }
-
-  if(data.session){
-    await finishEliteLogin(data.session.user);
-  }else{
-    setAuthMessage('Conta criada. Verifique seu e-mail para confirmar a conta e depois faça login.',true);
-  }
-}
-
-async function signInElite(){
-  const email=document.getElementById('authEmail').value.trim();
-  const password=document.getElementById('authPassword').value;
-  if(!email || !password){
-    setAuthMessage('Preencha e-mail e senha.');
-    return;
-  }
-  setAuthBusy(true);
-  setAuthMessage('Entrando...');
-  const {data,error}=await sb.auth.signInWithPassword({email,password});
-  setAuthBusy(false);
-
-  if(error){
-    setAuthMessage(error.message);
-    return;
-  }
-  await finishEliteLogin(data.user);
-}
-
-async function loadCloudState(user){
-  const {data,error}=await sb
-    .from('player_data')
-    .select('game_state,updated_at')
-    .eq('user_id',user.id)
-    .maybeSingle();
-
-  if(error) throw error;
-
-  if(data && data.game_state && Object.keys(data.game_state).length){
-    S=normalizeState(data.game_state);
-    localStorage.setItem(KEY,JSON.stringify(S));
-    return {found:true};
-  }
-
-  // Primeira sincronização: aproveita o progresso local existente.
-  S=normalizeState(S);
-  const {error:insertError}=await sb.from('player_data').insert({
-    user_id:user.id,
-    game_state:S
-  });
-  if(insertError) throw insertError;
-
-  localStorage.setItem(KEY,JSON.stringify(S));
-  return {found:false};
-}
-
-async function saveToCloud(){
-  if(!window.currentEliteUser) return;
-
-  const snapshot=clone(S);
-  const {error}=await sb.from('player_data').upsert({
-    user_id:window.currentEliteUser.id,
-    game_state:snapshot,
-    updated_at:new Date().toISOString()
-  },{onConflict:'user_id'});
-
-  if(error){
-    console.error('Erro ao salvar no Supabase:',error);
-    toast('Não foi possível sincronizar agora. O progresso continua salvo neste navegador.');
-  }
-}
-
-function showLoggedUser(user){
-  const gate=document.getElementById('authGate');
-  const userBox=document.getElementById('authUser');
-  const email=document.getElementById('authUserEmail');
-  if(gate)gate.style.display='none';
-  if(userBox)userBox.style.display='flex';
-  if(email)email.textContent=user.email||'Jogador';
-  document.body.classList.remove('auth-locked');
-}
-
-function showLogin(){
-  const gate=document.getElementById('authGate');
-  const userBox=document.getElementById('authUser');
-  if(gate)gate.style.display='flex';
-  if(userBox)userBox.style.display='none';
-  document.body.classList.add('auth-locked');
-}
-
-async function finishEliteLogin(user){
-  try{
-    setAuthMessage('Carregando seu personagem...');
-    await loadCloudState(user);
-    window.currentEliteUser=user;
-    showLoggedUser(user);
-
-    // O reset diário acontece depois de carregar o estado correto da nuvem.
-    checkDailyReset();
-    render('today');
-    await saveToCloud();
-    setAuthMessage('');
-  }catch(error){
-    console.error(error);
-    setAuthMessage('Erro ao carregar seu personagem: '+error.message);
-    try{await sb.auth.signOut();}catch(e){}
-  }
-}
-
-async function logoutElite(){
-  await saveToCloud();
-  await sb.auth.signOut();
-  window.currentEliteUser=null;
-  showLogin();
-  setAuthMessage('Você saiu da conta.');
-}
-
-document.getElementById('authLogin').onclick=signInElite;
-document.getElementById('authSignup').onclick=signUpElite;
-document.getElementById('authLogout').onclick=logoutElite;
-document.getElementById('authPassword').addEventListener('keydown',e=>{
-  if(e.key==='Enter')signInElite();
-});
-
-async function initEliteDashOnline(){
-  try{
-    const {data}=await sb.auth.getSession();
-    if(data.session?.user){
-      await finishEliteLogin(data.session.user);
-    }else{
-      showLogin();
-    }
-
-    sb.auth.onAuthStateChange(async(event,session)=>{
-      if(event==='SIGNED_OUT'){
-        window.currentEliteUser=null;
-        showLogin();
-      }
-    });
-  }catch(error){
-    console.error(error);
-    showLogin();
-    setAuthMessage('Não foi possível conectar ao servidor. Verifique sua internet.');
-  }
-}
-
+const SUPABASE_URL='https://rbxurwwnugmynxiu?';
 function xpGain(amount,attr){S.player.xp+=amount;if(attr)S.attributes[attr]=Math.min(100,S.attributes[attr]+Math.max(1,Math.round(amount/10)));while(S.player.xp>=S.player.maxXp){S.player.xp-=S.player.maxXp;S.player.level++;S.player.maxXp=Math.floor(S.player.maxXp*1.3);toast('LEVEL UP! Nível '+S.player.level+' alcançado!')}}
 
 const tabs=[
- ['today','🏠','Hoje'],['dashboard','📊','Dashboard'],['quests','🎯','Missões'],['habits','🔄','Hábitos'],
+ ['today','🏠','Hoje'],['dashboard','📊','Dashboard'],['history','📜','Histórico'],['quests','🎯','Missões'],['habits','🔄','Hábitos'],
  ['nutrition','🥗','Nutrição'],['knowledge','📚','Conhecimento'],['academic','🎓','Acadêmico'],['career','💼','Carreira'],['finance','💰','Finanças'],
  ['performance','💪','Performance'],['hall','🏆','Hall da Fama'],['store','🛒','Loja']
 ];
-function nav(active='today'){document.getElementById('nav').innerHTML=tabs.map(t=>`<button class="${t[0]===active?'active':''}" onclick="render('${t[0]}')"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('')}
+function nav(active='today'){document.getElementById('nav').innerHTML=tabs.map(t=>`<button class="${t[0]===active?'active':''}" onclick="render('${t[0]}')"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('')+(currentUser?`<button onclick="logout()"><b>🚪</b><span>Sair</span></button>`:'')}
+// Botão de saída aparece no fim do menu quando houver usuário autenticado.
+
 function pct(a,b){return b?Math.min(100,Math.round(a/b*100)):0}
 
 function daily(){
@@ -493,6 +236,10 @@ function daily(){
 }
 
 function xpToday(){return [...S.hygiene, ...S.college, ...S.houseTasks, ...S.habits].filter(x=>x.completed).reduce((a,x)=>a+x.xp,0)+S.tasks.filter(x=>x.done).reduce((a,x)=>a+x.xp,0)}
+
+function createDailySnapshot(){
+  return {date:today(),progress:daily(),xp:xpToday(),level:S.player.level,coins:S.player.coins,tasks:{hygiene:clone(S.hygiene),college:clone(S.college),houseTasks:clone(S.houseTasks),habits:clone(S.habits),tasks:clone(S.tasks),nutrition:clone(S.nutrition),quests:clone(S.quests)}};
+}
 
 function archiveCurrentDay(dateKey){
   if(!dateKey) return;
@@ -557,7 +304,7 @@ function streakUpdate(){
  const d=today();
  const p=daily();
 
- S.history[d]=p;
+ S.history[d]=createDailySnapshot();
 
  if(S.player.dailyRewardClaimed){
    save();
@@ -614,6 +361,7 @@ function attrBlock(){return `<div class="card"><h3>⚔️ ATRIBUTOS DO PERSONAGE
 function baseHeader(t,s){return `<div class="header"><div class="title">${t}</div><div class="subtitle">${s}</div></div>`}
 
 const views={
+history:()=>historyView(),
 today:()=>`${baseHeader('🏠 Hoje','Seu centro de comando. Tudo que importa hoje em um único lugar.')}
 <div class="today-hero"><div class="hero-grid"><div><div class="badge gold">⚔️ NÍVEL ${S.player.level}</div><div class="hero-level">${fmt(S.player.xp)} XP</div><div class="hero-xp">${fmt(S.player.xp)} / ${fmt(S.player.maxXp)} XP para o próximo nível</div><div class="progress"><div class="fill" style="width:${pct(S.player.xp,S.player.maxXp)}%"></div></div></div><div class="priority"><b>🎯 PRIORIDADES DE HOJE</b>${S.tasks.filter(x=>!x.done).slice(0,4).map(x=>`<div>${x.category} — ${x.name}</div>`).join('')||'<div>🏆 Todas as prioridades concluídas!</div>'}</div></div><div class="stat-mini"><div class="mini"><span class="label">🔥 Streak</span><strong class="gold">${S.player.streak} dias</strong></div><div class="mini"><span class="label">⚡ Progresso</span><strong class="green">${daily()}%</strong></div><div class="mini"><span class="label">✨ XP hoje</span><strong>${xpToday()}</strong></div><div class="mini"><span class="label">🪙 Ouro</span><strong class="gold">${fmt(S.player.coins)}</strong></div></div></div>
 <div class="grid"><div class="card"><h3>📋 Tarefas de hoje</h3><div class="list" style="margin-top:12px">${S.tasks.map((x,i)=>`<label class="task"><input type="checkbox" data-task="${i}" ${x.done?'checked':''}><span class="${x.done?'done':''}">${x.name} <small class="muted">(+${x.xp} XP)</small></span></label>`).join('')}</div></div>${attrBlock()}</div>
@@ -667,26 +415,22 @@ store:()=>`${baseHeader('🛒 Loja de Elite','Troque Ouro RPG por recompensas.')
 };
 
 function money(n){return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function historyProgress(v){
-  return typeof v === 'object' && v !== null ? Number(v.progress || 0) : Number(v || 0);
-}
-function weekAvg(){return avg(Object.entries(S.history).filter(([d])=>daysAgo(d)<7).map(x=>historyProgress(x[1])))}
-function monthAvg(){return avg(Object.entries(S.history).filter(([d])=>new Date(d+'T12:00:00').getMonth()===new Date().getMonth()).map(x=>historyProgress(x[1])))}
+function historyProgress(v){return typeof v==='object'&&v!==null?Number(v.progress||0):Number(v||0)}
+function historyXP(v){return typeof v==='object'&&v!==null?Number(v.xp||0):0}
+function historyCoins(v){return typeof v==='object'&&v!==null?Number(v.coins||0):0}
+function weekAvg(){return avg(Object.entries(S.history||{}).filter(([d])=>daysAgo(d)<7).map(x=>historyProgress(x[1])))}
+function monthAvg(){let n=new Date();return avg(Object.entries(S.history||{}).filter(([d])=>{let x=new Date(d+'T12:00:00');return x.getFullYear()===n.getFullYear()&&x.getMonth()===n.getMonth()}).map(x=>historyProgress(x[1])))}
 function avg(a){return a.length?Math.round(a.reduce((x,y)=>x+Number(y),0)/a.length):0}
 function daysAgo(d){return Math.floor((new Date()-new Date(d+'T12:00:00'))/86400000)}
+function historyTaskDetails(v){let t=v?.tasks;if(!t)return '<div class="muted">Registro antigo sem detalhamento das tarefas.</div>';let groups=[['🧼 Higiene',t.hygiene],['🎓 Faculdade',t.college],['🏠 Casa',t.houseTasks],['🔄 Hábitos',t.habits],['🎯 Tarefas',t.tasks],['🥗 Nutrição',t.nutrition],['⚔️ Missões',t.quests]].filter(x=>Array.isArray(x[1])&&x[1].length);return '<div class="history-task-groups">'+groups.map(([name,list])=>'<div class="history-task-group"><h4>'+name+'</h4>'+list.map(x=>{let done=!!(x.completed||x.done);return '<div class="history-task '+(done?'':'pending')+'">'+(done?'✅':'❌')+' '+(x.name||'Tarefa')+'</div>'}).join('')+'</div>').join('')+'</div>'}
 function calendar(){let out='<div class="calendar">'+['D','S','T','Q','Q','S','S'].map(x=>`<div class="dow">${x}</div>`).join('');for(let i=29;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let k=d.toISOString().slice(0,10),v=historyProgress(S.history[k]);out+=`<div class="day ${v===100?'perfect':v>=80?'good':v>0?'bad':''}" title="${k}: ${v}%">${v||''}</div>`}return out+'</div>'}
-function historyTable(){
-  let a=Object.entries(S.history).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,15);
-  if(!a.length)return '<div class="empty">Ainda não há histórico.</div>';
-  return `<table class="table"><tr><th>Data</th><th>Progresso</th><th>XP</th><th>Status</th></tr>${
-    a.map(([date,value])=>{
-      const p=historyProgress(value);
-      const xp=typeof value==='object' && value!==null ? Number(value.xp||0) : 0;
-      return `<tr><td>${date}</td><td>${p}%</td><td>${fmt(xp)}</td><td>${p>=80?'🏆 Qualificado':'—'}</td></tr>`;
-    }).join('')
-  }</table>`;
-}
+function historyTable(){let a=Object.entries(S.history||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,365);if(!a.length)return '<div class="empty">Ainda não há histórico.</div>';return '<div class="history-list">'+a.map(([date,value],i)=>{let p=historyProgress(value),xp=historyXP(value),coins=historyCoins(value);return `<details class="history-day" ${i===0?'open':''}><summary><b>${date}</b><strong>${p}%</strong><span>${p>=100?'🏆 Perfeito':p>=80?'✅ Qualificado':'—'}</span></summary><div class="history-day-content"><div class="history-stats"><div><span>⭐ XP</span><strong>+${fmt(xp)}</strong></div><div><span>🪙 Gold</span><strong>${fmt(coins)}</strong></div><div><span>📊 Progresso</span><strong>${p}%</strong></div><div><span>👤 Nível</span><strong>${typeof value==='object'&&value?value.level:'—'}</strong></div></div>${historyTaskDetails(value)}</div></details>`}).join('')+'</div>'}
+function historyView(){let a=Object.entries(S.history||{}),xp=a.reduce((s,[,v])=>s+historyXP(v),0),coins=a.reduce((s,[,v])=>s+historyCoins(v),0),perfect=a.filter(([,v])=>historyProgress(v)>=100).length;return `${baseHeader('📜 Histórico','Seu diário de evolução, salvo na nuvem.')}<div class="grid"><div class="card"><span class="label">Dias registrados</span><div class="value">${a.length}</div></div><div class="card"><span class="label">Dias perfeitos</span><div class="value gold">${perfect}</div></div><div class="card"><span class="label">XP registrado</span><div class="value">${fmt(xp)}</div></div><div class="card"><span class="label">Gold registrado</span><div class="value gold">${fmt(coins)}</div></div></div><div class="card" style="margin-top:18px"><h3>📖 Diário de evolução</h3><div style="margin-top:15px">${historyTable()}</div></div>`}
+
 function bossView(){let done=S.boss.items.filter(x=>x.done).length,p=pct(done,S.boss.items.length);return `<div class="row"><div><div class="badge gold">👹 BOSS DA SEMANA</div><h2 style="margin-top:9px">O Destruidor da Procrastinação</h2></div><div class="boss-hp">${p}%</div></div><div class="progress"><div class="fill gold" style="width:${p}%"></div></div><div class="boss-tasks">${S.boss.items.map((x,i)=>`<label class="boss-task"><input type="checkbox" data-boss="${i}" ${x.done?'checked':''}> ${x.name}</label>`).join('')}</div>${p===100&&!S.boss.bonusClaimed?'<button class="btn primary" id="claimBoss" style="margin-top:15px">🏆 Derrotar Boss — +500 XP / +1.000 Ouro</button>':''}`}
+
+function showAuth(mode='login',message=''){const o=document.getElementById('authOverlay');o.style.display='flex';o.innerHTML=`<div class="auth-box"><h1>⚔️ ELITEDASH</h1><p>${mode==='login'?'Entre para carregar seu personagem da nuvem.':'Crie sua conta para salvar seu progresso online.'}</p><input id="authEmail" type="email" placeholder="E-mail"><input id="authPassword" type="password" placeholder="Senha"><button class="btn primary" id="authSubmit">${mode==='login'?'Entrar':'Criar conta'}</button><div class="auth-msg">${message}</div><div class="auth-switch"><button id="authToggle">${mode==='login'?'Criar minha conta':'Já tenho uma conta'}</button></div></div>`;document.getElementById('authSubmit').onclick=async()=>{let email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password)return showAuth(mode,'Preencha e-mail e senha.');let r=mode==='login'?await supabaseClient.auth.signInWithPassword({email,password}):await supabaseClient.auth.signUp({email,password});if(r.error)return showAuth(mode,r.error.message);if(mode==='login'){currentUser=r.data.user;await loadCloud();checkDailyReset();render('today');o.style.display='none';}else{showAuth('login','Conta criada. Se o Supabase pedir confirmação por e-mail, confirme e depois entre.')}};document.getElementById('authToggle').onclick=()=>showAuth(mode==='login'?'signup':'login')}
+async function logout(){await supabaseClient.auth.signOut();currentUser=null;showAuth('login','Você saiu da conta.');}
 
 function render(tabName='today'){
   nav(tabName);
@@ -756,7 +500,14 @@ function bind(){
 }
 function toast(msg){let c=document.getElementById('toast');c.innerHTML=`<div class="toast"><b>Honra Conquistada</b><span>${msg}</span></div>`;setTimeout(()=>c.innerHTML='',3500)}
 
-initEliteDashOnline();
+(async function initEliteDash(){
+  const {data}=await supabaseClient.auth.getSession();
+  currentUser=data?.session?.user||null;
+  if(!currentUser){showAuth('login');return;}
+  await loadCloud();
+  checkDailyReset();
+  render('today');
+})();
 </script>
 </body>
 </html>
