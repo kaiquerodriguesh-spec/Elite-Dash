@@ -217,7 +217,87 @@ const defaultState={
  trophies:['Primeiro passo','Semana de consistência','Mestre da rotina']
 };
 
+let S=clone(defaultState);
+
 const SUPABASE_URL='https://rbxurwwnugmynxiu.supabase.co';
+const SUPABASE_KEY='sb_publishable_bhsKDob6ktLUTJWfXXIG6w_vsItv4f_';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null;
+let cloudSaveTimer=null;
+
+function mergeState(base, saved){
+  if(Array.isArray(saved)) return clone(saved);
+  if(saved && typeof saved==='object'){
+    const out={...(base && typeof base==='object' ? base : {})};
+    Object.keys(saved).forEach(k=>{
+      out[k]=mergeState(out[k],saved[k]);
+    });
+    return out;
+  }
+  return saved===undefined ? clone(base) : saved;
+}
+
+function normalizeState(saved){
+  const state=mergeState(clone(defaultState),saved||{});
+  if(!state.history) state.history={};
+  if(!state.quests) state.quests=[];
+  if(!state.inventory) state.inventory=[];
+  return state;
+}
+
+function save(){
+  try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){ console.warn('Falha no backup local',e); }
+  if(!currentUser) return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer=setTimeout(()=>saveToCloud(),250);
+}
+
+async function saveToCloud(){
+  if(!currentUser) return;
+  const snapshot=clone(S);
+  const {error}=await supabaseClient.from('player_data').upsert({
+    user_id:currentUser.id,
+    game_state:snapshot,
+    updated_at:new Date().toISOString()
+  },{onConflict:'user_id'});
+  if(error){
+    console.error('Erro ao salvar no Supabase:',error);
+    toast('⚠️ Sincronização falhou. Seu progresso continua salvo neste navegador.');
+  }
+}
+
+async function loadCloud(){
+  if(!currentUser) return;
+  const {data,error}=await supabaseClient
+    .from('player_data')
+    .select('game_state,updated_at')
+    .eq('user_id',currentUser.id)
+    .maybeSingle();
+
+  if(error){
+    console.error('Erro ao carregar o Supabase:',error);
+    toast('⚠️ Não foi possível carregar a nuvem.');
+    return;
+  }
+
+  if(data && data.game_state && Object.keys(data.game_state).length){
+    S=normalizeState(data.game_state);
+    try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+    return;
+  }
+
+  // Primeira vez desta conta: envia o progresso local atual para a nuvem.
+  S=normalizeState(S);
+  const {error:insertError}=await supabaseClient.from('player_data').insert({
+    user_id:currentUser.id,
+    game_state:S
+  });
+  if(insertError){
+    console.error('Erro ao criar dados do jogador:',insertError);
+    toast('⚠️ Não foi possível criar seu personagem na nuvem.');
+  }
+}
+
 function xpGain(amount,attr){S.player.xp+=amount;if(attr)S.attributes[attr]=Math.min(100,S.attributes[attr]+Math.max(1,Math.round(amount/10)));while(S.player.xp>=S.player.maxXp){S.player.xp-=S.player.maxXp;S.player.level++;S.player.maxXp=Math.floor(S.player.maxXp*1.3);toast('LEVEL UP! Nível '+S.player.level+' alcançado!')}}
 
 const tabs=[
@@ -278,7 +358,8 @@ function resetDailyTasks(){
 
 function checkDailyReset() {
   const d = today();
-  const lastActive = localStorage.getItem('eliteLastActiveDate');
+  const resetKey = currentUser ? 'eliteLastActiveDate:'+currentUser.id : 'eliteLastActiveDate';
+  const lastActive = localStorage.getItem(resetKey);
 
   if (S.player.lastQualifiedDay !== d && S.player.dailyRewardClaimed) {
     S.player.dailyRewardClaimed = false;
@@ -286,7 +367,7 @@ function checkDailyReset() {
 
   // Primeira abertura: apenas registra a data.
   if(!lastActive){
-    localStorage.setItem('eliteLastActiveDate', d);
+    localStorage.setItem(resetKey, d);
     save();
     return;
   }
@@ -295,7 +376,7 @@ function checkDailyReset() {
   if(lastActive !== d){
     archiveCurrentDay(lastActive);
     resetDailyTasks();
-    localStorage.setItem('eliteLastActiveDate', d);
+    localStorage.setItem(resetKey, d);
     save();
   }
 }
