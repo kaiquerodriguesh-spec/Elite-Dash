@@ -140,6 +140,28 @@ const fmt=n=>Number(n||0).toLocaleString('pt-BR');
 const clone=x=>JSON.parse(JSON.stringify(x));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+function renameListItem(listKey, idx, tab){
+  const list = S[listKey];
+  if(!list || !list[idx]) return;
+  const cur = list[idx].name || '';
+  const input = prompt('Novo nome:', cur);
+  if(input===null) return;
+  const n = input.trim();
+  if(!n) return;
+  list[idx].name = n;
+  save();
+  render(tab);
+}
+
+function deleteListItem(listKey, idx, tab){
+  const list = S[listKey];
+  if(!list || !list[idx]) return;
+  if(!confirm(`Remover "${list[idx].name}"? Essa ação não pode ser desfeita.`)) return;
+  list.splice(idx,1);
+  save();
+  render(tab);
+}
+
 const defaultState={
  player:{level:1,xp:0,maxXp:500,coins:0,streak:0,bestStreak:0,lastQualifiedDay:null,dailyRewardClaimed:false,totalPerfectDays:0,total80Days:0,lostDays:0},
  meta:{lastCheckedDate:null},
@@ -486,11 +508,23 @@ const attrNames={discipline:['⚔️','DISCIPLINA'],intelligence:['🧠','INTELI
 function attrBlock(){return `<div class="card"><h3>⚔️ ATRIBUTOS DO PERSONAGEM</h3>${Object.entries(attrNames).map(([k,v])=>`<div class="attr"><div><div class="row"><span class="attr-name">${v[0]} ${v[1]}</span></div><div class="progress"><div class="fill gold" style="width:${S.attributes[k]}%"></div></div></div><div class="attr-value">${S.attributes[k]}</div></div>`).join('')}</div>`}
 function baseHeader(t,s){return `<div class="header"><div class="title">${t}</div><div class="subtitle">${s}</div></div>`}
 
+function checklistSection(listKey, dataAttr, title, icon, tab, withMeta){
+  const list = S[listKey];
+  const p = pct(list.filter(x=>x.completed).length, list.length);
+  const items = list.map((x,i)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-${dataAttr}="${i}" ${x.completed?'checked':''}><span class="${x.completed?'done':''}">${esc(x.name)}${withMeta?` <small class="muted">+${x.xp} XP · ${attrNames[x.attr]?attrNames[x.attr][1]:x.attr}</small>`:''}</span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" onclick="renameListItem('${listKey}',${i},'${tab}')" title="Renomear">✏️</button><button type="button" class="btn" style="padding:4px 8px" onclick="deleteListItem('${listKey}',${i},'${tab}')" title="Remover">🗑️</button></span></div>`).join('') || '<div class="empty">Nenhum item ainda. Adicione um abaixo.</div>';
+  const form = withMeta
+    ? `<div class="form" style="margin-top:14px"><div class="field"><label>Novo item</label><input id="new_${listKey}_name" placeholder="Nome"></div><div class="field"><label>Atributo</label><select id="new_${listKey}_attr">${Object.entries(attrNames).map(([k,v])=>`<option value="${k}">${v[1]}</option>`).join('')}</select></div><div class="field"><label>XP</label><input id="new_${listKey}_xp" type="number" min="1" max="100" step="1" value="8"></div><button class="btn primary" data-addlist="${listKey}" data-addtab="${tab}" data-addattr="1">Adicionar</button></div>`
+    : `<div class="form" style="margin-top:14px"><div class="field"><label>Novo item</label><input id="new_${listKey}_name" placeholder="Ex: 2 copos de água"></div><button class="btn primary" data-addlist="${listKey}" data-addtab="${tab}">Adicionar</button></div>`;
+  return `<div class="card" style="margin-top:20px"><div class="row"><h3>${icon} ${title}</h3><span class="badge green">${p}%</span></div><div class="progress"><div class="fill green" style="width:${p}%"></div></div><div class="list" style="margin-top:14px">${items}</div>${form}</div>`;
+}
+
 const views={
 history:()=>historyView(),
 today:()=>`${baseHeader('🏠 Hoje','Seu centro de comando. Tudo que importa hoje em um único lugar.')}
-<div class="today-hero"><div class="hero-grid"><div><div class="badge gold">⚔️ NÍVEL ${S.player.level}</div><div class="hero-level">${fmt(S.player.xp)} XP</div><div class="hero-xp">${fmt(S.player.xp)} / ${fmt(S.player.maxXp)} XP para o próximo nível</div><div class="progress"><div class="fill" style="width:${pct(S.player.xp,S.player.maxXp)}%"></div></div></div><div class="priority"><b>🎯 PRIORIDADES DE HOJE</b>${S.tasks.filter(x=>!x.done).slice(0,4).map(x=>`<div>${x.category} — ${x.name}</div>`).join('')||'<div>🏆 Todas as prioridades concluídas!</div>'}</div></div><div class="stat-mini"><div class="mini"><span class="label">🔥 Streak</span><strong class="gold">${S.player.streak} dias</strong></div><div class="mini"><span class="label">⚡ Progresso</span><strong class="green">${daily()}%</strong></div><div class="mini"><span class="label">✨ XP hoje</span><strong>${xpToday()}</strong></div><div class="mini"><span class="label">🪙 Ouro</span><strong class="gold">${fmt(S.player.coins)}</strong></div></div></div>
-<div class="grid"><div class="card"><h3>📋 Tarefas de hoje</h3><div class="list" style="margin-top:12px">${S.tasks.map((x,i)=>`<label class="task"><input type="checkbox" data-task="${i}" ${x.done?'checked':''}><span class="${x.done?'done':''}">${x.name} <small class="muted">(+${x.xp} XP)</small></span></label>`).join('')}</div></div>${attrBlock()}</div>
+<div class="today-hero"><div class="hero-grid"><div><div class="badge gold">⚔️ NÍVEL ${S.player.level}</div><div class="hero-level">${fmt(S.player.xp)} XP</div><div class="hero-xp">${fmt(S.player.xp)} / ${fmt(S.player.maxXp)} XP para o próximo nível</div><div class="progress"><div class="fill" style="width:${pct(S.player.xp,S.player.maxXp)}%"></div></div></div><div class="priority"><b>🎯 PRIORIDADES DE HOJE</b>${S.tasks.filter(x=>!x.done).slice(0,4).map(x=>`<div>${esc(x.category)} — ${esc(x.name)}</div>`).join('')||'<div>🏆 Todas as prioridades concluídas!</div>'}</div></div><div class="stat-mini"><div class="mini"><span class="label">🔥 Streak</span><strong class="gold">${S.player.streak} dias</strong></div><div class="mini"><span class="label">⚡ Progresso</span><strong class="green">${daily()}%</strong></div><div class="mini"><span class="label">✨ XP hoje</span><strong>${xpToday()}</strong></div><div class="mini"><span class="label">🪙 Ouro</span><strong class="gold">${fmt(S.player.coins)}</strong></div></div></div>
+<div class="grid"><div class="card"><h3>📋 Tarefas de hoje</h3><div class="list" style="margin-top:12px">${S.tasks.map((x,i)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-task="${i}" ${x.done?'checked':''}><span class="${x.done?'done':''}">${esc(x.name)} <small class="muted">(+${x.xp} XP)</small></span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" onclick="renameListItem('tasks',${i},'today')" title="Renomear">✏️</button><button type="button" class="btn" style="padding:4px 8px" onclick="deleteListItem('tasks',${i},'today')" title="Remover">🗑️</button></span></div>`).join('')||'<div class="empty">Nenhuma tarefa hoje. Adicione uma abaixo.</div>'}</div>
+<div class="form" style="margin-top:14px"><div class="field"><label>Nova tarefa</label><input id="newTaskName" placeholder="Ex: Enviar relatório"></div><div class="field"><label>Categoria</label><select id="newTaskCat"><option>Faculdade</option><option>Trabalho</option><option>Concurso</option><option>Leitura</option><option>Pessoal</option></select></div><div class="field"><label>XP</label><input id="newTaskXp" type="number" min="1" max="200" step="1" value="30"></div><button class="btn primary" id="addTaskBtn">Adicionar</button></div>
+</div>${attrBlock()}</div>
 <div class="grid" style="margin-top:18px"><div class="card"><h3>📈 Semana</h3><div class="value">${weekAvg()}%</div><div class="label">média dos últimos 7 dias</div><div class="progress"><div class="fill green" style="width:${weekAvg()}%"></div></div></div><div class="card"><h3>📅 Mês</h3><div class="value">${monthAvg()}%</div><div class="label">média dos registros do mês</div><div class="progress"><div class="fill gold" style="width:${monthAvg()}%"></div></div></div></div>`,
 dashboard:()=>`${baseHeader('📊 Dashboard','Visão estratégica da sua evolução.')}
 <div class="grid"><div class="card"><span class="label">Nível</span><div class="value red">${S.player.level}</div></div><div class="card"><span class="label">XP total disponível</span><div class="value">${fmt(S.player.xp)}</div></div><div class="card"><span class="label">🔥 Streak atual</span><div class="value gold">${S.player.streak}</div></div><div class="card"><span class="label">🏆 Recorde</span><div class="value gold">${S.player.bestStreak}</div></div><div class="card"><span class="label">Dias ≥80%</span><div class="value green">${S.player.total80Days}</div></div><div class="card"><span class="label">Dias perfeitos</span><div class="value green">${S.player.totalPerfectDays}</div></div></div>
@@ -499,38 +533,14 @@ dashboard:()=>`${baseHeader('📊 Dashboard','Visão estratégica da sua evoluç
 <div class="card" style="margin-top:18px"><h3>📜 Histórico</h3>${historyTable()}</div>`,
 quests:()=>`${baseHeader('🎯 Missões','Tarefas, projetos e objetivos que geram XP e atributos.')}
 <div class="card"><div class="form"><div class="field"><label>Missão</label><input id="newQuest" placeholder="Ex: finalizar relatório"></div><div class="field"><label>Categoria</label><select id="questCat"><option>Faculdade</option><option>Trabalho</option><option>Concurso</option><option>Projeto</option><option>Pessoal</option></select></div><div class="field"><label>XP</label><input id="questXp" type="number" min="1" max="500" step="1" value="50"></div><button class="btn primary" id="addQuest">Adicionar</button></div></div>
-<div class="card" style="margin-top:18px"><div class="list">${S.quests.map((x,i)=>`<label class="task"><input type="checkbox" data-quest="${i}" ${x.done?'checked':''}><span class="${x.done?'done':''}"><b>${esc(x.name)}</b> <small class="muted">${esc(x.category)} · +${x.xp} XP</small></span></label>`).join('')||'<div class="empty">Nenhuma missão personalizada.</div>'}</div></div>
+<div class="card" style="margin-top:18px"><div class="list">${S.quests.map((x,i)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-quest="${i}" ${x.done?'checked':''}><span class="${x.done?'done':''}"><b>${esc(x.name)}</b> <small class="muted">${esc(x.category)} · +${x.xp} XP</small></span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" onclick="renameListItem('quests',${i},'quests')" title="Renomear">✏️</button><button type="button" class="btn" style="padding:4px 8px" onclick="deleteListItem('quests',${i},'quests')" title="Remover">🗑️</button></span></div>`).join('')||'<div class="empty">Nenhuma missão personalizada.</div>'}</div></div>
 <div class="boss" style="margin-top:20px">${bossView()}</div>`,
 habits:()=>`${baseHeader('🔄 Hábitos','Rotina diária focada em consistência, não perfeição.')}
-<div class="card">
-  <div class="row"><h3>🧼 Rotina de Higiene</h3><span class="badge green">${pct(S.hygiene.filter(x=>x.completed).length, S.hygiene.length)}%</span></div>
-  <div class="progress"><div class="fill green" style="width:${pct(S.hygiene.filter(x=>x.completed).length, S.hygiene.length)}%"></div></div>
-  <div class="list" style="margin-top:14px">
-    ${S.hygiene.map((x,i)=>`<label class="task"><input type="checkbox" data-hygiene="${i}" ${x.completed?'checked':''}><span class="${x.completed?'done':''}">${x.name} <small class="muted">+${x.xp} XP · ${attrNames[x.attr][1]}</small></span></label>`).join('')}
-  </div>
-</div>
-<div class="card" style="margin-top:20px">
-  <div class="row"><h3>🎓 Rotina da Faculdade & Redação</h3><span class="badge green">${pct(S.college.filter(x=>x.completed).length, S.college.length)}%</span></div>
-  <div class="progress"><div class="fill green" style="width:${pct(S.college.filter(x=>x.completed).length, S.college.length)}%"></div></div>
-  <div class="list" style="margin-top:14px">
-    ${S.college.map((x,i)=>`<label class="task"><input type="checkbox" data-college="${i}" ${x.completed?'checked':''}><span class="${x.completed?'done':''}">${x.name} <small class="muted">+${x.xp} XP · ${attrNames[x.attr][1]}</small></span></label>`).join('')}
-  </div>
-</div>
-<div class="card" style="margin-top:20px">
-  <div class="row"><h3>🏠 Organização e Limpeza da Casa</h3><span class="badge green">${pct(S.houseTasks.filter(x=>x.completed).length, S.houseTasks.length)}%</span></div>
-  <div class="progress"><div class="fill green" style="width:${pct(S.houseTasks.filter(x=>x.completed).length, S.houseTasks.length)}%"></div></div>
-  <div class="list" style="margin-top:14px">
-    ${S.houseTasks.map((x,i)=>`<label class="task"><input type="checkbox" data-housetask="${i}" ${x.completed?'checked':''}><span class="${x.completed?'done':''}">${x.name} <small class="muted">+${x.xp} XP · ${attrNames[x.attr][1]}</small></span></label>`).join('')}
-  </div>
-</div>
-<div class="card" style="margin-top:20px">
-  <div class="row"><h3>🔄 Demais Hábitos Diários</h3><span class="badge green">${pct(S.habits.filter(x=>x.completed).length, S.habits.length)}%</span></div>
-  <div class="progress"><div class="fill green" style="width:${pct(S.habits.filter(x=>x.completed).length, S.habits.length)}%"></div></div>
-  <div class="list" style="margin-top:14px">
-    ${S.habits.map((x,i)=>`<label class="task"><input type="checkbox" data-habit="${i}" ${x.completed?'checked':''}><span class="${x.completed?'done':''}">${x.name} <small class="muted">+${x.xp} XP · ${attrNames[x.attr][1]}</small></span></label>`).join('')}
-  </div>
-</div>`,
-nutrition:()=>`${baseHeader('🥗 Nutrição','Alimentos diários essenciais para o seu desempenho físico e mental.')}<div class="card"><div class="row"><h3>Alimentos de hoje</h3><span class="badge green">${daily()}%</span></div><div class="progress"><div class="fill green" style="width:${daily()}%"></div></div><div class="list" style="margin-top:14px">${S.nutrition.map((x,i)=>`<label class="task"><input type="checkbox" data-nutrition="${i}" ${x.completed?'checked':''}><span class="${x.completed?'done':''}">${x.name}</span></label>`).join('')}</div></div>`,
+${checklistSection('hygiene','hygiene','Rotina de Higiene','🧼','habits',true)}
+${checklistSection('college','college','Rotina da Faculdade & Redação','🎓','habits',true)}
+${checklistSection('houseTasks','housetask','Organização e Limpeza da Casa','🏠','habits',true)}
+${checklistSection('habits','habit','Demais Hábitos Diários','🔄','habits',true)}`,
+nutrition:()=>`${baseHeader('🥗 Nutrição','Alimentos diários essenciais para o seu desempenho físico e mental.')}${checklistSection('nutrition','nutrition','Alimentos de hoje','🥗','nutrition',false)}`,
 knowledge:()=>`${baseHeader('📚 Conhecimento','Biblioteca, leitura e progresso cultural.')}<div class="card"><div class="form"><div class="field"><label>Livro</label><input id="bookName" placeholder="Título"></div><div class="field"><label>Autor</label><input id="bookAuthor" placeholder="Autor"></div><button class="btn primary" id="addBook">Registrar livro</button></div></div><div class="grid" style="margin-top:18px"><div class="card"><h3>📖 Livros lidos</h3><div class="value gold">${S.books.length}</div><div class="label">meta pessoal pode ser definida depois</div></div><div class="card"><h3>🏅 Próxima conquista</h3><div class="value">${S.books.length<1?1:S.books.length<3?3:S.books.length<5?5:10}</div><div class="label">livros para a próxima medalha</div></div></div><div class="book-grid" style="margin-top:18px">${S.books.map((b,i)=>`<div class="book"><h3>📖 ${esc(b.name)}</h3><small>por ${esc(b.author)||'Autor não informado'}</small><div style="margin-top:15px"><button class="btn" data-delbook="${i}">Remover</button></div></div>`).join('')||'<div class="empty">Sua biblioteca ainda está vazia.</div>'}</div>`,
 finance:()=>`${baseHeader('💰 Tesouraria','Dinheiro real separado do Ouro RPG.')}<div class="grid"><div class="card"><span class="label">Saldo atual</span><div class="finance-num green">R$ ${money(S.finances.balance)}</div></div><div class="card"><span class="label">Reserva</span><div class="finance-num blue">R$ ${money(S.finances.reserve)}</div></div><div class="card"><span class="label">Dívidas</span><div class="finance-num red">R$ ${money(S.finances.debt)}</div></div></div><div class="card" style="margin-top:18px"><h3>🎯 Metas financeiras</h3>${S.finances.goals.map((g,i)=>`<div class="goal-row"><div class="row"><span>${g.name}</span><b>${pct(g.current,g.target)}%</b></div><div class="progress"><div class="fill green" style="width:${pct(g.current,g.target)}%"></div></div><div class="row" style="margin-top:5px"><small class="muted">R$ ${money(g.current)} / R$ ${money(g.target)}</small><span><button class="btn" data-fin="${i}" data-d="-100">−</button> <button class="btn" data-fin="${i}" data-d="100">+ R$100</button></span></div></div>`).join('')}</div><div class="card" style="margin-top:18px"><h3>Editar valores principais</h3><div class="form" style="margin-top:12px"><div class="field"><label>Saldo</label><input id="finBalance" type="number" step="0.01" value="${S.finances.balance}"></div><div class="field"><label>Reserva</label><input id="finReserve" type="number" min="0" step="0.01" value="${S.finances.reserve}"></div><div class="field"><label>Dívidas</label><input id="finDebt" type="number" min="0" step="0.01" value="${S.finances.debt}"></div><button class="btn primary" id="saveFin">Salvar</button></div></div>`,
 hall:()=>`${baseHeader('🏆 Hall da Fama','Suas conquistas permanentes.')}<div class="today-hero"><div class="row"><div><div class="badge gold">SALÃO DE ELITE</div><div class="hero-level">${S.trophies.length} Conquistas</div></div><div class="hero-level gold">${fmt(S.player.coins)} 🪙</div></div></div><div class="trophy-grid">${S.trophies.map((t,i)=>`<div class="trophy unlocked"><i class="fa-solid fa-trophy"></i><h3 style="font:700 .95rem Cinzel,serif;margin-top:10px">${t}</h3><small class="muted">Conquista #${i+1}</small></div>`).join('')}</div>`,
@@ -614,6 +624,25 @@ function bind(){
 });
  const questCatToAttr={Faculdade:'intelligence',Trabalho:'career',Concurso:'intelligence',Projeto:'career',Pessoal:'discipline'};
  const addQ=document.getElementById('addQuest');if(addQ)addQ.onclick=()=>{let n=document.getElementById('newQuest').value.trim();if(!n)return;let cat=document.getElementById('questCat').value;S.quests.push({id:Date.now(),name:n,category:cat,xp:Number(document.getElementById('questXp').value)||50,attr:questCatToAttr[cat]||'discipline',done:false});save();render('quests')};
+ const taskCatToAttr={Faculdade:'intelligence',Trabalho:'career',Concurso:'intelligence',Leitura:'knowledge',Pessoal:'discipline'};
+ const addT=document.getElementById('addTaskBtn');if(addT)addT.onclick=()=>{let n=document.getElementById('newTaskName').value.trim();if(!n)return;let cat=document.getElementById('newTaskCat').value;S.tasks.push({id:'t'+Date.now(),name:n,category:cat,attr:taskCatToAttr[cat]||'discipline',xp:Number(document.getElementById('newTaskXp').value)||30,done:false});save();render('today')};
+ document.querySelectorAll('[data-addlist]').forEach(e=>e.onclick=()=>{
+   const listKey = e.dataset.addlist;
+   const tab = e.dataset.addtab || 'habits';
+   const nameInput = document.getElementById('new_'+listKey+'_name');
+   const n = nameInput ? nameInput.value.trim() : '';
+   if(!n) return;
+   const item = { id: listKey+'_'+Date.now(), name: n, completed: false };
+   if(e.dataset.addattr){
+     const attrSel = document.getElementById('new_'+listKey+'_attr');
+     const xpInput = document.getElementById('new_'+listKey+'_xp');
+     item.attr = attrSel ? attrSel.value : 'discipline';
+     item.xp = xpInput ? (Number(xpInput.value)||8) : 8;
+   }
+   S[listKey].push(item);
+   save();
+   render(tab);
+ });
  const addB=document.getElementById('addBook');if(addB)addB.onclick=()=>{let n=document.getElementById('bookName').value.trim();if(!n)return;S.books.push({name:n,author:document.getElementById('bookAuthor').value.trim()});xpGain(50,'knowledge');S.attributes.culture=Math.min(100,S.attributes.culture+2);S.player.coins+=50;save();render('knowledge');toast('Livro registrado: +50 XP e +50 Ouro')};
  document.querySelectorAll('[data-delbook]').forEach(e=>e.onclick=()=>{S.books.splice(e.dataset.delbook,1);save();render('knowledge')});
  document.querySelectorAll('[data-fin]').forEach(e=>e.onclick=()=>{S.finances.goals[e.dataset.fin].current=Math.max(0,S.finances.goals[e.dataset.fin].current+Number(e.dataset.d));save();render('finance')});
