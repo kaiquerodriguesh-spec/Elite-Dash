@@ -521,7 +521,7 @@ function historyView(){let a=Object.entries(S.history||{}),xp=a.reduce((s,[,v])=
 
 function bossView(){let done=S.boss.items.filter(x=>x.done).length,p=pct(done,S.boss.items.length);return `<div class="row"><div><div class="badge gold">👹 BOSS DA SEMANA</div><h2 style="margin-top:9px">O Destruidor da Procrastinação</h2></div><div class="boss-hp">${p}%</div></div><div class="progress"><div class="fill gold" style="width:${p}%"></div></div><div class="boss-tasks">${S.boss.items.map((x,i)=>`<label class="boss-task"><input type="checkbox" data-boss="${i}" ${x.done?'checked':''}> ${x.name}</label>`).join('')}</div>${p===100&&!S.boss.bonusClaimed?'<button class="btn primary" id="claimBoss" style="margin-top:15px">🏆 Derrotar Boss — +500 XP / +1.000 Ouro</button>':''}`}
 
-function showAuth(mode='login',message=''){const o=document.getElementById('authOverlay');o.style.display='flex';o.innerHTML=`<div class="auth-box"><h1>⚔️ ELITEDASH</h1><p>${mode==='login'?'Entre para carregar seu personagem da nuvem.':'Crie sua conta para salvar seu progresso online.'}</p><input id="authEmail" type="email" placeholder="E-mail"><input id="authPassword" type="password" placeholder="Senha"><button class="btn primary" id="authSubmit">${mode==='login'?'Entrar':'Criar conta'}</button><div class="auth-msg">${message}</div><div class="auth-switch"><button id="authToggle">${mode==='login'?'Criar minha conta':'Já tenho uma conta'}</button></div></div>`;document.getElementById('authSubmit').onclick=async()=>{let email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password)return showAuth(mode,'Preencha e-mail e senha.');let r=mode==='login'?await supabaseClient.auth.signInWithPassword({email,password}):await supabaseClient.auth.signUp({email,password});if(r.error)return showAuth(mode,r.error.message);if(mode==='login'){currentUser=r.data.user;await loadCloud();checkDailyReset();render('today');o.style.display='none';}else{showAuth('login','Conta criada. Se o Supabase pedir confirmação por e-mail, confirme e depois entre.')}};document.getElementById('authToggle').onclick=()=>showAuth(mode==='login'?'signup':'login')}
+function showAuth(mode='login',message=''){const o=document.getElementById('authOverlay');o.style.display='flex';o.innerHTML=`<div class="auth-box"><h1>⚔️ ELITEDASH</h1><p>${mode==='login'?'Entre para carregar seu personagem da nuvem.':'Crie sua conta para salvar seu progresso online.'}</p><input id="authEmail" type="email" placeholder="E-mail"><input id="authPassword" type="password" placeholder="Senha"><button class="btn primary" id="authSubmit">${mode==='login'?'Entrar':'Criar conta'}</button><div class="auth-msg">${message}</div><div class="auth-switch"><button id="authToggle">${mode==='login'?'Criar minha conta':'Já tenho uma conta'}</button></div></div>`;document.getElementById('authSubmit').onclick=async()=>{let email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password)return showAuth(mode,'Preencha e-mail e senha.');let r=mode==='login'?await supabaseClient.auth.signInWithPassword({email,password}):await supabaseClient.auth.signUp({email,password});if(r.error)return showAuth(mode,r.error.message);if(mode==='login'){currentUser=r.data.user;await loadCloud();checkDailyReset();render('today');o.style.display='none';setupLogoutButton();}else{showAuth('login','Conta criada. Se o Supabase pedir confirmação por e-mail, confirme e depois entre.')}};document.getElementById('authToggle').onclick=()=>showAuth(mode==='login'?'signup':'login')}
 async function logout(){await supabaseClient.auth.signOut();currentUser=null;showAuth('login','Você saiu da conta.');}
 
 function render(tabName='today'){
@@ -599,35 +599,34 @@ function toast(msg){let c=document.getElementById('toast');c.innerHTML=`<div cla
   await loadCloud();
   checkDailyReset();
   render('today');
+  setupLogoutButton();
 })();
 
 function setupLogoutButton(){
   const btn=document.getElementById('logoutBtn');
   if(!btn) return;
-  btn.style.display = S.currentUser ? 'block' : 'none';
+  btn.style.display = currentUser ? 'block' : 'none';
   btn.onclick = async ()=>{
     btn.disabled=true;
     try{
-      if(window.supabaseClient){
-        const {error}=await window.supabaseClient.auth.signOut();
-        if(error) throw error;
-      }
+      const {error}=await supabaseClient.auth.signOut();
+      if(error) throw error;
     }catch(err){
       console.error('Erro ao sair:',err);
-    }finally{
-      S.currentUser=null;
-      const auth=document.getElementById('authOverlay');
-      if(auth) auth.style.display='flex';
-      btn.style.display='none';
       btn.disabled=false;
-      render();
+      return;
     }
+    currentUser=null;
+    const auth=document.getElementById('authOverlay');
+    if(auth) auth.style.display='flex';
+    btn.style.display='none';
+    btn.disabled=false;
+    showAuth('login','Você saiu da conta.');
   };
 }
-
 </script>
 
-<button id="logoutBtn" type="button" aria-label="Sair" style="display:none;position:fixed;right:18px;top:18px;z-index:9999;padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:inherit;cursor:pointer;">🚪 Sair</button>
+<button id="logoutBtn" type="button" aria-label="Sair" style="display:none;position:fixed;right:18px;top:18px;z-index:9999;padding:9px 16px;border-radius:10px;border:1px solid #7a1c2b;background:#1b080d;color:#fff;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25);">🚪 Sair</button>
 
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
