@@ -202,11 +202,7 @@ async function loadCloudState(user){
   if(error) throw error;
 
   if(data?.game_state && typeof data.game_state==='object' && Object.keys(data.game_state).length){
-    S=Object.assign(clone(defaultState),data.game_state);
-    if(!S.history) S.history={};
-    if(!S.hygiene) S.hygiene=clone(defaultState.hygiene);
-    if(!S.college) S.college=clone(defaultState.college);
-    if(!S.houseTasks) S.houseTasks=clone(defaultState.houseTasks);
+    S=normalizeState(data.game_state);
     return 'cloud';
   }
 
@@ -351,11 +347,7 @@ function load(){
 
     if (!savedData) return clone(defaultState);
     let parsed = JSON.parse(savedData);
-    let state = Object.assign(clone(defaultState), parsed);
-    if(!state.hygiene) state.hygiene = clone(defaultState.hygiene);
-    if(!state.college) state.college = clone(defaultState.college);
-    if(!state.houseTasks) state.houseTasks = clone(defaultState.houseTasks);
-    return state;
+    return normalizeState(parsed);
   }catch(e){
     return clone(defaultState);
   }
@@ -396,6 +388,48 @@ function archiveCurrentDay(dateKey){
       quests:clone(S.quests)
     }
   };
+}
+
+function recordToday(){
+  const dateKey=today();
+  if(!S.history) S.history={};
+  S.history[dateKey]={
+    date:dateKey,
+    progress:daily(),
+    xp:xpToday(),
+    level:S.player.level,
+    coins:S.player.coins,
+    tasks:{
+      hygiene:clone(S.hygiene||[]),
+      college:clone(S.college||[]),
+      houseTasks:clone(S.houseTasks||[]),
+      habits:clone(S.habits||[]),
+      tasks:clone(S.tasks||[]),
+      nutrition:clone(S.nutrition||[]),
+      quests:clone(S.quests||[])
+    }
+  };
+}
+
+function normalizeState(state){
+  const base=clone(defaultState);
+  const merged=Object.assign(base,state||{});
+  const arrayKeys=['habits','hygiene','college','houseTasks','tasks','nutrition','books','quests','inventory','weightHistory','trophies'];
+  arrayKeys.forEach(k=>{ if(!Array.isArray(merged[k])) merged[k]=clone(defaultState[k]); });
+  if(!merged.player || typeof merged.player!=='object') merged.player=clone(defaultState.player);
+  else merged.player=Object.assign(clone(defaultState.player),merged.player);
+  if(!merged.attributes || typeof merged.attributes!=='object') merged.attributes=clone(defaultState.attributes);
+  else merged.attributes=Object.assign(clone(defaultState.attributes),merged.attributes);
+  if(!merged.history || typeof merged.history!=='object' || Array.isArray(merged.history)) merged.history={};
+  if(!merged.finances || typeof merged.finances!=='object') merged.finances=clone(defaultState.finances);
+  else merged.finances=Object.assign(clone(defaultState.finances),merged.finances);
+  if(!Array.isArray(merged.finances.goals)) merged.finances.goals=clone(defaultState.finances.goals);
+  if(!merged.performance || typeof merged.performance!=='object') merged.performance=clone(defaultState.performance);
+  else merged.performance=Object.assign(clone(defaultState.performance),merged.performance);
+  if(!merged.boss || typeof merged.boss!=='object') merged.boss=clone(defaultState.boss);
+  else merged.boss=Object.assign(clone(defaultState.boss),merged.boss);
+  if(!Array.isArray(merged.boss.items)) merged.boss.items=clone(defaultState.boss.items);
+  return merged;
 }
 
 function resetDailyTasks(){
@@ -612,8 +646,13 @@ function bossView(){let done=S.boss.items.filter(x=>x.done).length,p=pct(done,S.
 
 function render(tabName='today'){
   nav(tabName);
-  document.getElementById('app').innerHTML = views[tabName]();
-  bind();
+  try{
+    document.getElementById('app').innerHTML = views[tabName]();
+    bind();
+  }catch(e){
+    console.error('Erro ao renderizar '+tabName,e);
+    document.getElementById('app').innerHTML = `<div class=\"card\" style=\"margin:24px\"><h2>⚠️ Erro ao carregar esta tela</h2><p class=\"muted\">${e.message||e}</p><button class=\"btn primary\" onclick=\"render('today')\">Voltar para Hoje</button></div>`;
+  }
 }
 
 function bind(){
@@ -691,7 +730,7 @@ async function handleLogin(){
     const mode=await loadCloudState(currentUser);
     cloudReady=true;
     hideAuth();
-    checkDailyReset();
+    try{checkDailyReset();}catch(resetError){console.error('Erro no reset diário:',resetError);}
     render('today');
     setAuthMessage('');
     toast(mode==='migrated'?'☁️ Seu progresso local foi enviado para a nuvem.':'☁️ Personagem carregado da nuvem.');
@@ -716,7 +755,7 @@ async function handleSignup(){
     try{
       await saveCloudNow();
       hideAuth();
-      checkDailyReset();
+      try{checkDailyReset();}catch(resetError){console.error('Erro no reset diário:',resetError);}
       render('today');
       setAuthMessage('');
       toast('☁️ Conta criada e personagem salvo na nuvem.');
@@ -755,7 +794,7 @@ async function initAuth(){
       await loadCloudState(currentUser);
       cloudReady=true;
       hideAuth();
-      checkDailyReset();
+      try{checkDailyReset();}catch(resetError){console.error('Erro no reset diário:',resetError);}
       render('today');
     }catch(e){
       console.error(e);
