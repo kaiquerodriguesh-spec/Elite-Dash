@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="EliteDash — transforme sua rotina, estudos, saúde e finanças em um RPG de progresso pessoal.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <title>EliteDash — Life Management RPG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,8 +29,13 @@ button,input,select{font:inherit}button{cursor:pointer}
 .sidebar{position:fixed;top:0;left:0;z-index:100;width:255px;height:100vh;padding:22px 16px;background:rgba(11,4,7,.97);border-right:1px solid var(--border);backdrop-filter:blur(15px);display:flex;flex-direction:column;gap:25px}
 .logo{font:800 1.15rem Cinzel,serif;color:#fca5a5;letter-spacing:1.5px;padding:0 10px}
 .logo i{color:var(--gold);margin-right:8px}
-.nav{display:flex;flex-direction:column;gap:5px;overflow:auto}
-.nav button{border:0;background:transparent;color:var(--muted);padding:11px 13px;border-radius:12px;text-align:left;display:flex;align-items:center;gap:12px;transition:var(--tr);font-weight:500}
+.nav{display:flex;flex-direction:column;gap:5px;overflow:auto;position:relative}
+.nav-mobile{display:none}
+.mobile-more-panel{display:none}
+.nav-group{display:flex;flex-direction:column;gap:5px}
+.nav-group-label{font-size:.62rem;letter-spacing:1.5px;color:var(--muted);opacity:.6;padding:10px 13px 2px;font-weight:700}
+.nav-group:first-child .nav-group-label{padding-top:0}
+.nav button{border:0;background:transparent;color:var(--muted);padding:11px 13px;border-radius:12px;text-align:left;display:flex;align-items:center;gap:12px;transition:var(--tr);font-weight:500;width:100%}
 .nav button:hover,.nav button.active{background:rgba(220,38,38,.16);color:#fff}
 .nav button.active{border-left:4px solid var(--red);padding-left:9px;box-shadow:inset 15px 0 25px rgba(220,38,38,.08)}
 .main{margin-left:255px;padding:34px;max-width:1450px}
@@ -60,6 +65,23 @@ input,select{width:100%;background:#0d0508;color:#fff;border:1px solid var(--bor
 .section-title{font:700 1.15rem Cinzel,serif;margin:28px 0 14px;border-left:4px solid var(--red);padding-left:10px}
 .boss{border:1px solid rgba(251,191,36,.35);background:linear-gradient(145deg,rgba(36,13,19,.96),rgba(10,4,7,.98));border-radius:20px;padding:22px}.boss h2{font:900 1.5rem Cinzel,serif}.boss-hp{font:800 1.2rem Cinzel,serif;color:var(--gold)}
 .boss-tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:15px}.boss-task{padding:10px;background:rgba(0,0,0,.3);border-radius:10px;font-size:.78rem}
+.char-mini-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.streak-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.streak-dots{letter-spacing:3px;color:var(--gold);font-size:1rem}
+.priority-task{background:rgba(10,4,7,.75);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.boss-arena{position:relative;overflow:hidden}
+.boss-hp-big{font:900 2.2rem Cinzel,serif;color:var(--gold)}
+.boss-hp-bar .fill{background:linear-gradient(90deg,#dc2626,#f87171)}
+.boss-hit{animation:bossHitShake .5s ease}
+.boss-hit::after{content:'';position:absolute;inset:0;background:rgba(220,38,38,.35);animation:bossHitFlash .5s ease;pointer-events:none;border-radius:inherit}
+@keyframes bossHitShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes bossHitFlash{0%{opacity:1}100%{opacity:0}}
+.combat-toast{border-color:rgba(220,38,38,.6)!important}
+.combat-toast b{color:#fca5a5!important}
+.combat-toast span{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.ct-xp{color:#93c5fd;font-weight:700}
+.ct-coins{color:var(--gold);font-weight:700}
+.ct-dmg{color:#f87171;font-weight:700}
 .table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid rgba(255,255,255,.07);font-size:.8rem}.table th{color:var(--muted)}
 .book-grid,.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}.book,.shop{background:linear-gradient(145deg,rgba(28,10,16,.95),rgba(9,3,6,.98));border:1px solid var(--border);border-radius:16px;padding:17px}.book h3,.shop h3{font:700 .95rem Cinzel,serif}.book small{color:var(--muted)}
 .pet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
@@ -72,7 +94,7 @@ input,select{width:100%;background:#0d0508;color:#fff;border:1px solid var(--bor
 .finance-num{font:800 1.5rem Cinzel,serif}.goal-row{margin:14px 0}.goal-row .row{font-size:.8rem}
 .empty{color:var(--muted);font-size:.82rem;padding:15px 0}
 .toast{position:fixed;right:20px;bottom:20px;z-index:999;padding:14px 18px;border-radius:13px;background:#17070c;border:1px solid rgba(251,191,36,.5);box-shadow:0 15px 40px #0009;max-width:340px}.toast b{display:block;color:var(--gold);font:700 .85rem Cinzel,serif}.toast span{font-size:.75rem;color:var(--muted)}
-@media(max-width:900px){.sidebar{width:100%;height:auto;bottom:0;top:auto;border-right:0;border-top:1px solid var(--border);padding:7px}.logo{display:none}.nav{flex-direction:row;justify-content:space-around;overflow:hidden}.nav button{flex-direction:column;gap:2px;padding:6px;font-size:.58rem}.nav button span{display:none}.nav button.active{border-left:0;border-top:3px solid var(--red);padding-top:3px}.main{margin-left:0;padding:20px 18px 90px}.hero-grid{grid-template-columns:1fr}.stat-mini{grid-template-columns:repeat(2,1fr)}.daily-reward-status{margin-left:0;padding:12px 18px}.grid[style*="280px"]{grid-template-columns:1fr!important}}
+@media(max-width:900px){.sidebar{width:100%;height:auto;bottom:0;top:auto;border-right:0;border-top:1px solid var(--border);padding:7px}.logo{display:none}.nav-desktop{display:none}.nav-mobile{display:flex;flex-direction:row;justify-content:space-around;overflow:hidden;width:100%}.nav-mobile button{flex-direction:column;gap:3px;padding:7px 4px;font-size:.6rem;flex:1;border-radius:10px}.nav-mobile button span{display:block;font-size:.58rem}.nav button.active{border-left:0;border-top:3px solid var(--red);padding-top:4px}.mobile-more-panel{position:fixed;left:10px;right:10px;bottom:66px;z-index:99;background:rgba(11,4,7,.98);border:1px solid var(--border);border-radius:16px;padding:10px;backdrop-filter:blur(15px);grid-template-columns:repeat(3,1fr);gap:7px;max-height:55vh;overflow:auto;box-shadow:0 -12px 30px rgba(0,0,0,.5)}.mobile-more-panel.open{display:grid}.mobile-more-panel button{flex-direction:column;gap:4px;padding:13px 6px;font-size:.64rem;border-radius:10px;background:rgba(255,255,255,.03)}.mobile-more-panel button span{display:block}.main{margin-left:0;padding:20px 18px 92px}.hero-grid{grid-template-columns:1fr}.stat-mini{grid-template-columns:repeat(2,1fr)}.daily-reward-status{margin-left:0;padding:12px 18px}.grid[style*="280px"]{grid-template-columns:1fr!important}.grid[style*="1fr 1fr"]{grid-template-columns:1fr!important}}
 
 .auth-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 20%,#3b0b16 0,#100307 55%,#050103 100%);padding:20px}
 .auth-box{width:min(430px,100%);background:rgba(22,9,14,.97);border:1px solid var(--border);border-radius:22px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.55)}
@@ -95,7 +117,7 @@ input,select{width:100%;background:#0d0508;color:#fff;border:1px solid var(--bor
 <nav class="nav" id="nav"></nav>
 </aside>
 <main class="main" id="app"><div class="empty" style="padding:40px 0;text-align:center">⚔️ Carregando EliteDash...</div></main>
-<div id="toast"></div>
+<div id="toast"></div><div id="cloudSyncStatus" aria-live="polite" style="position:fixed;right:16px;bottom:80px;z-index:9998;padding:7px 10px;border-radius:9px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;opacity:.78">☁️ Nuvem pronta</div>
 
 <script>
 
@@ -142,7 +164,20 @@ function refreshRewardBanner(){
 
 
 const KEY='eliteMasterDashStateV11';
-const today=()=>new Date().toISOString().slice(0,10);
+const ELITE_TZ='America/Sao_Paulo'; // Horário de Brasília — sem DST desde 2019, então é estável o ano todo.
+function dateKeyFromDate(d=new Date()){
+  return new Intl.DateTimeFormat('en-CA',{
+    timeZone:ELITE_TZ,year:'numeric',month:'2-digit',day:'2-digit'
+  }).format(d);
+}
+const today=()=>dateKeyFromDate(new Date());
+function yesterdayKey(){
+  const current=today();
+  const [y,m,d]=current.split('-').map(Number);
+  const utcNoon=new Date(Date.UTC(y,m-1,d,12,0,0));
+  utcNoon.setUTCDate(utcNoon.getUTCDate()-1);
+  return `${utcNoon.getUTCFullYear()}-${String(utcNoon.getUTCMonth()+1).padStart(2,'0')}-${String(utcNoon.getUTCDate()).padStart(2,'0')}`;
+}
 const fmt=n=>Number(n||0).toLocaleString('pt-BR');
 const clone=x=>JSON.parse(JSON.stringify(x));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -200,8 +235,9 @@ function renameBook(id){
 }
 
 const defaultState={
- player:{level:1,xp:0,maxXp:500,coins:0,streak:0,bestStreak:0,lastQualifiedDay:null,dailyRewardClaimed:false,totalPerfectDays:0,total80Days:0,lostDays:0,bossDefeats:0},
+ player:{level:1,xp:0,maxXp:500,coins:0,streak:0,bestStreak:0,lastQualifiedDay:null,dailyRewardClaimed:false,dailyRewardDate:null,totalPerfectDays:0,total80Days:0,lostDays:0,bossDefeats:0},
  meta:{lastCheckedDate:null},
+ dailyStats:{date:null,startXp:0,startLevel:1,startCoins:0,xpEarned:0,coinsEarned:0},
  milestones:[],
  pets:[],
  avatar:{equipped:{helm:null,armor:null,weapon:null,cape:null,aura:null}, owned:[]},
@@ -282,7 +318,7 @@ const defaultState={
   {name:'Moto', target:20000, current:0},
   {name:'Apartamento', target:100000, current:0}
  ]},
- boss:{week:null, completed:false, bonusClaimed:false, items:[
+ boss:{week:null, completed:false, bonusClaimed:false, hp:1000, maxHp:1000, damagePerQuest:60, items:[
   {name:'5 sessões de estudo', done:false},{name:'3 sessões de exercício', done:false},
   {name:'7 dias de rotina', done:false},{name:'100 páginas lidas', done:false},{name:'Concluir 1 projeto', done:false}
  ]},
@@ -296,6 +332,58 @@ const SUPABASE_KEY='sb_publishable_bhsKDob6ktLUTJWfXXIG6w_vsItv4f_';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 let cloudSaveTimer=null;
+let localRevision=0;
+let lastKnownCloudUpdatedAt=null;
+
+function unionById(a=[],b=[]){
+  const out=[...a];
+  const ids=new Set(a.map(x=>x.id));
+  b.forEach(x=>{ if(x && x.id && !ids.has(x.id)){ out.push(x); ids.add(x.id); } });
+  return out;
+}
+
+function safeMergeStates(local, remote){
+  // Parte da versão confirmada mais recente no servidor e reforça por cima
+  // qualquer progresso local que ainda não tinha chegado lá — nunca o contrário.
+  const merged = clone(remote);
+
+  // Contadores cumulativos: nunca podem regredir num merge.
+  merged.player.xp = Math.max(Number(local.player.xp||0), Number(remote.player.xp||0));
+  merged.player.coins = Math.max(Number(local.player.coins||0), Number(remote.player.coins||0));
+  merged.player.level = Math.max(Number(local.player.level||1), Number(remote.player.level||1));
+  merged.player.bestStreak = Math.max(Number(local.player.bestStreak||0), Number(remote.player.bestStreak||0));
+  merged.player.total80Days = Math.max(Number(local.player.total80Days||0), Number(remote.player.total80Days||0));
+  merged.player.totalPerfectDays = Math.max(Number(local.player.totalPerfectDays||0), Number(remote.player.totalPerfectDays||0));
+  merged.player.bossDefeats = Math.max(Number(local.player.bossDefeats||0), Number(remote.player.bossDefeats||0));
+
+  // Recompensa diária: se qualquer um dos dois lados já resgatou hoje, nunca "desresgata".
+  merged.player.dailyRewardClaimed = !!(local.player.dailyRewardClaimed || remote.player.dailyRewardClaimed);
+  merged.player.dailyRewardDate = [local.player.dailyRewardDate, remote.player.dailyRewardDate].filter(Boolean).sort().pop() || null;
+
+  // Streak/último dia qualificado: prevalece a referência de data mais recente.
+  if(String(local.player.lastQualifiedDay||'') > String(remote.player.lastQualifiedDay||'')){
+    merged.player.lastQualifiedDay = local.player.lastQualifiedDay;
+    merged.player.streak = local.player.streak;
+  }
+
+  // Histórico: nunca perder dias. Um dia fechado é imutável e nunca é sobrescrito por um aberto.
+  merged.history = { ...(remote.history||{}) };
+  Object.entries(local.history||{}).forEach(([d,v])=>{
+    const existing = merged.history[d];
+    if(!existing){ merged.history[d]=v; return; }
+    if(existing.closed===true) return; // servidor já fechou este dia — mantém como está
+    if(v && v.closed===true){ merged.history[d]=v; return; } // local fechou e o servidor ainda não sabia
+    if(historyProgress(v) > historyProgress(existing)) merged.history[d]=v;
+  });
+
+  // Pets/equipamentos/marcos: união sem duplicar.
+  merged.pets = unionById(remote.pets||[], local.pets||[]);
+  merged.avatar = merged.avatar || {equipped:{helm:null,armor:null,weapon:null,cape:null,aura:null},owned:[]};
+  merged.avatar.owned = Array.from(new Set([...(remote.avatar?.owned||[]),...(local.avatar?.owned||[])]));
+  merged.milestones = Array.from(new Set([...(remote.milestones||[]),...(local.milestones||[])]));
+
+  return merged;
+}
 
 function mergeState(base, saved){
   if(Array.isArray(saved)) return clone(saved);
@@ -314,27 +402,58 @@ function normalizeState(saved){
   if(!state.history) state.history={};
   if(!state.quests) state.quests=[];
   if(!state.inventory) state.inventory=[];
-  return ensureIds(state);
+  if(!state.dailyStats || typeof state.dailyStats!=='object') state.dailyStats=clone(defaultState.dailyStats);
+  if(!Number.isFinite(Number(state.dailyStats.xpEarned))) state.dailyStats.xpEarned=0;
+  if(!Number.isFinite(Number(state.dailyStats.coinsEarned))) state.dailyStats.coinsEarned=0;
+  if(!state.player.dailyRewardDate && state.player.dailyRewardClaimed && state.player.lastQualifiedDay){
+    state.player.dailyRewardDate=state.player.lastQualifiedDay;
+  }
+  return ensureTaskDefaults(ensureIds(state));
 }
 
 function save(){
+  localRevision++;
+  S._syncRevision=localRevision;
   try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){ console.warn('Falha no backup local',e); }
   if(!currentUser) return;
   clearTimeout(cloudSaveTimer);
-  cloudSaveTimer=setTimeout(()=>saveToCloud(),250);
+  cloudSaveTimer=setTimeout(()=>saveToCloud(localRevision),250);
 }
 
-async function saveToCloud(){
+async function saveToCloud(revision=localRevision){
   if(!currentUser) return;
+  if(revision!==localRevision) return;
+
+  // Proteção contra "stale write": se outro dispositivo salvou depois da nossa
+  // última leitura conhecida, mesclamos com segurança em vez de sobrescrever.
+  try{
+    if(lastKnownCloudUpdatedAt){
+      const {data:check}=await supabaseClient.from('player_data').select('game_state,updated_at').eq('user_id',currentUser.id).maybeSingle();
+      if(check && check.updated_at && check.updated_at>lastKnownCloudUpdatedAt){
+        const remote=normalizeState(check.game_state);
+        S=safeMergeStates(S,remote);
+        toast('🔄 Sincronizado com outro dispositivo — nenhum progresso foi perdido.');
+      }
+    }
+  }catch(e){
+    console.warn('Falha ao checar concorrência antes de salvar; salvando mesmo assim.',e);
+  }
+
   const snapshot=clone(S);
-  const {error}=await supabaseClient.from('player_data').upsert({
+  snapshot._syncRevision=revision;
+  const {error,data:saved}=await supabaseClient.from('player_data').upsert({
     user_id:currentUser.id,
     game_state:snapshot,
     updated_at:new Date().toISOString()
-  },{onConflict:'user_id'});
+  },{onConflict:'user_id'}).select('updated_at').maybeSingle();
+  const syncEl=document.getElementById('cloudSyncStatus');
   if(error){
     console.error('Erro ao salvar no Supabase:',error);
+    if(syncEl) syncEl.textContent='⚠️ Nuvem: erro ao sincronizar';
     toast('⚠️ Sincronização falhou. Seu progresso continua salvo neste navegador.');
+  }else{
+    lastKnownCloudUpdatedAt = saved?.updated_at || new Date().toISOString();
+    if(syncEl) syncEl.textContent='☁️ Salvo na nuvem';
   }
 }
 
@@ -354,32 +473,65 @@ async function loadCloud(){
 
   if(data && data.game_state && Object.keys(data.game_state).length){
     S=normalizeState(data.game_state);
+    localRevision=Number(S._syncRevision||0);
+    lastKnownCloudUpdatedAt=data.updated_at||new Date().toISOString();
     try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
     return;
   }
 
-  // Primeira vez desta conta: envia o progresso local atual para a nuvem.
+  // Primeira vez desta conta: envia o progresso local atual (já limpo por logout(),
+  // se aplicável) para a nuvem.
   S=normalizeState(S);
-  const {error:insertError}=await supabaseClient.from('player_data').insert({
+  const {error:insertError,data:inserted}=await supabaseClient.from('player_data').insert({
     user_id:currentUser.id,
     game_state:S
-  });
+  }).select('updated_at').maybeSingle();
   if(insertError){
     console.error('Erro ao criar dados do jogador:',insertError);
     toast('⚠️ Não foi possível criar seu personagem na nuvem.');
+  }else{
+    lastKnownCloudUpdatedAt = inserted?.updated_at || new Date().toISOString();
+  }
+}
+
+function ensureDailyStats(){
+  const d=today();
+  if(!S.dailyStats || S.dailyStats.date!==d){
+    const previous=S.dailyStats;
+    S.dailyStats={
+      date:d,
+      startXp:Number(S.player.xp||0),
+      startLevel:Number(S.player.level||1),
+      startCoins:Number(S.player.coins||0),
+      xpEarned:0,
+      coinsEarned:0
+    };
+    // Nunca deixa uma troca de tela/dispositivo apagar o ledger já fechado.
+    if(previous && previous.date && previous.date!==d && !S.history[previous.date]){
+      S.history[previous.date]={
+        ...previous,
+        endXp:Number(S.player.xp||0),
+        endLevel:Number(S.player.level||1),
+        endCoins:Number(S.player.coins||0)
+      };
+    }
   }
 }
 
 function xpGain(amount,attr){
-  amount = Math.round(amount * (1 + petBuffPct('xp',attr)/100));
-  S.player.xp+=amount;
-  if(attr)S.attributes[attr]=Math.min(100,S.attributes[attr]+Math.max(1,Math.round(amount/10)));
+  const n=Math.max(0,Math.round(Number(amount)||0) * (1 + petBuffPct('xp',attr)/100));
+  ensureDailyStats();
+  S.player.xp+=n;
+  S.dailyStats.xpEarned+=n;
+  if(attr)S.attributes[attr]=Math.min(100,S.attributes[attr]+Math.max(1,Math.round(n/10)));
   while(S.player.xp>=S.player.maxXp){S.player.xp-=S.player.maxXp;S.player.level++;S.player.maxXp=Math.floor(S.player.maxXp*1.3);toast('LEVEL UP! Nível '+S.player.level+' alcançado!')}
 }
 function addGold(amount){
-  const total = Math.round(amount * (1 + petBuffPct('gold')/100));
-  S.player.coins += total;
-  return total;
+  const n=Math.round(Number(amount)||0) * (1 + petBuffPct('gold')/100);
+  ensureDailyStats();
+  S.player.coins+=n;
+  S.dailyStats.coinsEarned+=n;
+  return n;
 }
 
 /* ===================== SISTEMA DE PETS COMPANHEIROS ===================== */
@@ -541,12 +693,37 @@ function avatarSVG(){
 }
 
 const tabs=[
- ['today','🏠','Hoje'],['dashboard','📊','Dashboard'],['avatar','🧙','Avatar'],['menagerie','🐾','Estábulo'],['history','📜','Histórico'],['quests','🎯','Missões'],['habits','🔄','Hábitos'],
- ['nutrition','🥗','Nutrição'],['knowledge','📚','Conhecimento'],['finance','💰','Finanças'],
- ['hall','🏆','Hall da Fama'],['store','🛒','Loja']
+ ['today','🏠','Hoje','principal'],['quests','🎯','Missões','principal'],['boss','👹','Boss','principal'],['dashboard','📊','Dashboard','principal'],
+ ['avatar','🧙','Avatar','personagem'],['menagerie','🐾','Estábulo','personagem'],['hall','🏆','Hall da Fama','personagem'],
+ ['habits','🔄','Hábitos','vida'],['nutrition','🥗','Nutrição','vida'],['knowledge','📚','Conhecimento','vida'],['finance','💰','Finanças','vida'],['history','📜','Histórico','vida'],
+ ['store','🛒','Loja','recompensas']
 ];
-function nav(active='today'){document.getElementById('nav').innerHTML=tabs.map(t=>`<button aria-label="${t[2]}" class="${t[0]===active?'active':''}" onclick="render('${t[0]}')"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('')+(currentUser?`<button aria-label="Sair" onclick="logout()"><b>🚪</b><span>Sair</span></button>`:'')}
-// Botão de saída aparece no fim do menu quando houver usuário autenticado.
+const TAB_GROUP_LABEL={principal:'PRINCIPAL',personagem:'PERSONAGEM',vida:'VIDA',recompensas:'RECOMPENSAS'};
+const MOBILE_PRIMARY=['today','quests','boss','avatar']; // igual ao pedido: Hoje | Missões | Boss | Avatar | Mais
+let mobileMoreOpen=false;
+let currentTab='today';
+
+function toggleMobileMore(){ mobileMoreOpen=!mobileMoreOpen; nav(currentTab); }
+
+function nav(active='today'){
+  currentTab=active;
+  const groups={};
+  tabs.forEach(t=>{ (groups[t[3]]=groups[t[3]]||[]).push(t); });
+
+  // Sidebar desktop: agrupada, com título de seção.
+  const desktopHTML = Object.entries(groups).map(([g,items])=>
+    `<div class="nav-group"><div class="nav-group-label">${TAB_GROUP_LABEL[g]||''}</div>${items.map(t=>`<button aria-label="${t[2]}" class="${t[0]===active?'active':''}" onclick="render('${t[0]}')"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('')}</div>`
+  ).join('') + (currentUser?`<div class="nav-group"><button aria-label="Sair" onclick="logout()"><b>🚪</b><span>Sair</span></button></div>`:'');
+
+  // Barra mobile: 4 itens fixos + botão "Mais" que abre um painel com o restante.
+  const primaryTabs = MOBILE_PRIMARY.map(id=>tabs.find(t=>t[0]===id)).filter(Boolean);
+  const restTabs = tabs.filter(t=>!MOBILE_PRIMARY.includes(t[0]));
+  const mobilePrimaryHTML = primaryTabs.map(t=>`<button aria-label="${t[2]}" class="${t[0]===active?'active':''}" onclick="render('${t[0]}')"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('')
+    + `<button aria-label="Mais opções" class="${mobileMoreOpen?'active':''}" onclick="toggleMobileMore()"><b>☰</b><span>Mais</span></button>`;
+  const mobileMoreHTML = `<div class="mobile-more-panel ${mobileMoreOpen?'open':''}">${restTabs.map(t=>`<button aria-label="${t[2]}" class="${t[0]===active?'active':''}" onclick="mobileMoreOpen=false;render('${t[0]}')"><b>${t[1]}</b><span>${t[2]}</span></button>`).join('')}${currentUser?`<button aria-label="Sair" onclick="logout()"><b>🚪</b><span>Sair</span></button>`:''}</div>`;
+
+  document.getElementById('nav').innerHTML = `<div class="nav-desktop">${desktopHTML}</div><div class="nav-mobile">${mobilePrimaryHTML}</div>${mobileMoreHTML}`;
+}
 
 function pct(a,b){return b?Math.min(100,Math.round(a/b*100)):0}
 
@@ -556,59 +733,95 @@ function daily(){
 }
 
 function xpToday(){return [...S.hygiene, ...S.college, ...S.houseTasks, ...S.habits].filter(x=>x.completed).reduce((a,x)=>a+x.xp,0)+S.tasks.filter(x=>x.done).reduce((a,x)=>a+x.xp,0)}
+function xpPendingToday(){return [...S.hygiene, ...S.college, ...S.houseTasks, ...S.habits].filter(x=>!x.completed).reduce((a,x)=>a+x.xp,0)+S.tasks.filter(x=>!x.done).reduce((a,x)=>a+x.xp,0)}
 
 function createDailySnapshot(){
-  return {date:today(),progress:daily(),xp:xpToday(),level:S.player.level,coins:S.player.coins,tasks:{hygiene:clone(S.hygiene),college:clone(S.college),houseTasks:clone(S.houseTasks),habits:clone(S.habits),tasks:clone(S.tasks),nutrition:clone(S.nutrition),quests:clone(S.quests)}};
-}
-
-function archiveCurrentDay(dateKey){
-  if(!dateKey) return;
-
-  const existing = S.history[dateKey];
-  const progress = daily();
-
-  // Guarda um retrato detalhado do dia anterior.
-  S.history[dateKey] = {
-    date: dateKey,
-    progress: progress,
-    xp: xpToday(),
-    level: S.player.level,
-    coins: S.player.coins,
-    tasks: {
-      hygiene: clone(S.hygiene),
-      college: clone(S.college),
-      houseTasks: clone(S.houseTasks),
-      habits: clone(S.habits),
-      tasks: clone(S.tasks),
-      nutrition: clone(S.nutrition),
-      quests: clone(S.quests)
+  ensureDailyStats();
+  return {
+    date:S.dailyStats.date || today(),
+    progress:daily(),
+    taskXpAvailable:xpPendingToday(),
+    xpEarned:Number(S.dailyStats.xpEarned||0),
+    coinsEarned:Number(S.dailyStats.coinsEarned||0),
+    startXp:Number(S.dailyStats.startXp||0),
+    startLevel:Number(S.dailyStats.startLevel||1),
+    startCoins:Number(S.dailyStats.startCoins||0),
+    endXp:Number(S.player.xp||0),
+    endLevel:Number(S.player.level||1),
+    endCoins:Number(S.player.coins||0),
+    tasks:{
+      hygiene:clone(S.hygiene),college:clone(S.college),houseTasks:clone(S.houseTasks),
+      habits:clone(S.habits),tasks:clone(S.tasks),nutrition:clone(S.nutrition),quests:clone(S.quests)
     }
   };
 }
 
+function archiveCurrentDay(dateKey){
+  if(!dateKey) return;
+  // Um dia encerrado é imutável. Só o ledger do próprio dia pode fechá-lo.
+  const existing=S.history[dateKey];
+  if(existing && existing.closed===true) return;
+
+  if(S.dailyStats && S.dailyStats.date===dateKey){
+    const snap=createDailySnapshot();
+    snap.date=dateKey;
+    snap.closed=true;
+    snap.closedAt=new Date().toISOString();
+    S.history[dateKey]=snap;
+    return;
+  }
+
+  // Compatibilidade com estados antigos: nunca inventa dados.
+  if(!existing){
+    S.history[dateKey]={
+      date:dateKey,
+      progress:0,
+      xpEarned:0,
+      coinsEarned:0,
+      tasks:{},
+      closed:true,
+      closedAt:new Date().toISOString()
+    };
+  }
+}
+
 function resetDailyTasks(){
-  if(S.hygiene) S.hygiene.forEach(x => x.completed = false);
-  if(S.college) S.college.forEach(x => x.completed = false);
-  if(S.houseTasks) S.houseTasks.forEach(x => x.completed = false);
-  if(S.habits) S.habits.forEach(x => x.completed = false);
-  if(S.tasks) S.tasks.forEach(x => x.done = false);
-  if(S.nutrition) S.nutrition.forEach(x => x.completed = false);
-  if(S.quests) S.quests.forEach(x => x.done = false);
+  if(S.hygiene) S.hygiene.forEach(x=>x.completed=false);
+  if(S.college) S.college.forEach(x=>x.completed=false);
+  if(S.houseTasks) S.houseTasks.forEach(x=>x.completed=false);
+  if(S.habits) S.habits.forEach(x=>x.completed=false);
+  if(S.tasks) S.tasks.forEach(x=>x.done=false);
+  if(S.nutrition) S.nutrition.forEach(x=>x.completed=false);
+  if(S.quests) S.quests.forEach(x=>x.done=false);
+}
+
+function startNewDailyLedger(){
+  const d=today();
+  S.dailyStats={
+    date:d,startXp:Number(S.player.xp||0),startLevel:Number(S.player.level||1),
+    startCoins:Number(S.player.coins||0),xpEarned:0,coinsEarned:0
+  };
 }
 
 function recordToday(){
-  const d = today();
-  if(!S.history || typeof S.history !== 'object' || Array.isArray(S.history)){
-    S.history = {};
-  }
-  S.history[d] = createDailySnapshot();
+  ensureDailyStats();
+  const d=today();
+  if(!S.history || typeof S.history!=='object' || Array.isArray(S.history)) S.history={};
+  if(S.history[d] && S.history[d].closed===true) return;
+  S.history[d]=createDailySnapshot();
+  S.history[d].closed=false;
 }
 
-function isoWeekKey(d=new Date()){
-  const t=new Date(d); t.setHours(0,0,0,0);
-  t.setDate(t.getDate()+3-((t.getDay()+6)%7));
-  const w1=new Date(t.getFullYear(),0,4);
-  return t.getFullYear()+'-W'+(1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7));
+function isoWeekKey(dateKey=today()){
+  const [y,m,d]=dateKey.split('-').map(Number);
+  const t=new Date(Date.UTC(y,m-1,d,12,0,0)); // meio-dia UTC evita qualquer problema de borda/DST
+  const dayNum=(t.getUTCDay()+6)%7; // segunda=0 ... domingo=6
+  t.setUTCDate(t.getUTCDate()-dayNum+3); // quinta-feira da mesma semana ISO
+  const firstThursday=new Date(Date.UTC(t.getUTCFullYear(),0,4));
+  const firstDayNum=(firstThursday.getUTCDay()+6)%7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate()-firstDayNum+3);
+  const week=1+Math.round((t-firstThursday)/(7*86400000));
+  return `${t.getUTCFullYear()}-W${String(week).padStart(2,'0')}`;
 }
 
 function checkWeeklyReset(){
@@ -616,6 +829,7 @@ function checkWeeklyReset(){
   if(S.boss.week !== wk){
     S.boss.week = wk;
     S.boss.bonusClaimed = false;
+    S.boss.hp = S.boss.maxHp || 1000;
     S.boss.items.forEach(i=>i.done=false);
     save();
   }
@@ -626,25 +840,36 @@ function checkDailyReset() {
   if(!S.meta) S.meta = {lastCheckedDate:null};
   const lastActive = S.meta.lastCheckedDate;
 
-  if (S.player.lastQualifiedDay !== d && S.player.dailyRewardClaimed) {
+  if (S.player.lastQualifiedDay !== d && S.player.dailyRewardDate !== d) {
     S.player.dailyRewardClaimed = false;
   }
 
   // Primeira abertura (nesta conta, em qualquer dispositivo): apenas registra e já contabiliza o dia.
   if(!lastActive){
     S.meta.lastCheckedDate = d;
+    ensureDailyStats();
     recordToday();
     save();
     return;
   }
 
-  // Novo dia: arquiva o anterior e reseta SOMENTE as tarefas diárias.
-  // Usa S.meta (sincronizado na nuvem) em vez de localStorage, para funcionar
-  // corretamente mesmo ao trocar de dispositivo/navegador.
-  if(lastActive !== d){
+  // Comparação cronológica (strings YYYY-MM-DD comparam corretamente com < e >).
+  // CRÍTICO: só considera "novo dia" quando `d` é estritamente POSTERIOR a `lastActive`.
+  // Isso evita reset prematuro se `S.meta.lastCheckedDate` vier "adiantado" por qualquer
+  // motivo (outro dispositivo com versão em cache antiga, relógio do sistema errado,
+  // dado sincronizado antes da correção de fuso horário etc.) — o dia só vira de fato
+  // quando o horário de Brasília realmente passar da meia-noite.
+  if(d > lastActive){
     archiveCurrentDay(lastActive);
     resetDailyTasks();
     S.meta.lastCheckedDate = d;
+    startNewDailyLedger();
+    recordToday();
+    save();
+  }else if(d < lastActive){
+    // Data salva está no futuro em relação ao horário real de Brasília agora — não faz
+    // nada além de registrar o dia atual sem resetar, e não regride lastCheckedDate
+    // (evita ficar alternando reset/não-reset por causa de um valor corrompido).
     recordToday();
     save();
   }else{
@@ -656,9 +881,10 @@ function streakUpdate(){
  const d=today();
  const p=daily();
 
- S.history[d]=createDailySnapshot();
+ ensureDailyStats();
+ recordToday();
 
- if(S.player.dailyRewardClaimed){
+ if(S.player.dailyRewardClaimed && S.player.dailyRewardDate===d){
    refreshRewardBanner();
    save();
    return;
@@ -671,10 +897,7 @@ function streakUpdate(){
  }
 
  const reward = calculateDailyReward(p);
-
- const y=new Date();
- y.setDate(y.getDate()-1);
- const yd=y.toISOString().slice(0,10);
+ const yd = yesterdayKey(); // sempre calculado no horário de Brasília, nunca no fuso do dispositivo.
 
  S.player.streak =
    S.player.lastQualifiedDay===yd
@@ -693,13 +916,14 @@ function streakUpdate(){
  }
 
  S.player.lastQualifiedDay=d;
+ S.player.dailyRewardDate=d;
+ S.player.dailyRewardClaimed=true;
 
  addGold(reward.coins);
  xpGain(reward.xp,'discipline');
  checkPetUnlocks();
 
- S.player.dailyRewardClaimed=true;
-
+ recordToday();
  refreshRewardBanner();
 
  if(p===100){
@@ -714,6 +938,149 @@ function streakUpdate(){
 }
 
 const attrNames={discipline:['⚔️','DISCIPLINA'],intelligence:['🧠','INTELIGÊNCIA'],physical:['💪','FÍSICO'],finance:['💰','FINANÇAS'],career:['💼','CARREIRA'],knowledge:['🎓','CONHECIMENTO'],culture:['📚','CULTURA']};
+
+function difficultyBadge(item){
+  const d=DIFFICULTY[item.difficulty]||DIFFICULTY.normal;
+  return `<span class="badge" style="border-color:${d.color};color:${d.color}">${d.icon} ${d.label}</span>`;
+}
+
+function priorityMissionsHTML(limit=4){
+  const rank={epica:3,dificil:2,normal:1,facil:0};
+  const pending=[
+    ...S.tasks.filter(x=>!x.done).map(x=>({...x,_type:'task'})),
+    ...S.quests.filter(x=>!x.done).map(x=>({...x,_type:'quest'}))
+  ].sort((a,b)=>(rank[b.difficulty]??1)-(rank[a.difficulty]??1) || (b.xp||0)-(a.xp||0)).slice(0,limit);
+
+  if(!pending.length) return '<div class="empty">🏆 Tudo em dia! Nenhuma missão pendente no momento.</div>';
+
+  return '<div class="list">'+pending.map(x=>{
+    const d=DIFFICULTY[x.difficulty]||DIFFICULTY.normal;
+    const dataAttr = x._type==='task' ? `data-task="${x.id}"` : `data-quest="${x.id}"`;
+    return `<label class="task priority-task" style="border-left:3px solid ${d.color};cursor:pointer">
+      <input type="checkbox" ${dataAttr}>
+      <span>${d.icon} <b>${esc(x.name)}</b><br><small class="muted">${x._type==='quest'?'⚔️ MISSÃO':'📋 TAREFA'} · +${x.xp} XP · ⚔️ ${x.dmg||d.dmg} dano ao Boss</small></span>
+    </label>`;
+  }).join('')+'</div>';
+}
+
+function bossFlavorText(hpPct){
+  if(hpPct<=0) return '💀 O Boss caiu! Reivindique sua recompensa.';
+  if(hpPct<=25) return '😨 Ele está prestes a cair...';
+  if(hpPct<=50) return '😤 "Impossível... como você é tão forte?"';
+  if(hpPct<=75) return '⚔️ A batalha está equilibrada.';
+  return '👹 Ele ainda está no auge de sua força.';
+}
+
+function bossPreviewHTML(){
+  let hp=typeof S.boss.hp==='number'?S.boss.hp:(S.boss.maxHp||1000);
+  let maxHp=S.boss.maxHp||1000;
+  let hpPct=pct(hp,maxHp);
+  return `<div class="card boss-preview-card ${lastBossHitFlash?'boss-hit':''}">
+    <div class="row"><h3>👹 Boss do Mês</h3><span class="badge gold">${hpPct}% HP</span></div>
+    <div class="progress" style="height:14px;margin-top:10px"><div class="fill" style="width:${hpPct}%"></div></div>
+    <p class="muted" style="font-size:.8rem;margin-top:8px">${bossFlavorText(hpPct)}</p>
+    <button class="btn primary" style="margin-top:12px;width:100%" onclick="render('boss')">Ver Boss →</button>
+  </div>`;
+}
+
+function streakHeaderHTML(){
+  const next=nextStreakMilestone(S.player.streak);
+  return `<div class="streak-row" style="margin-top:10px"><span class="streak-dots">${streakDots(S.player.streak)}</span><div><small class="muted">🔥 ${S.player.streak} dias de sequência</small>${next?`<br><small class="muted">Próxima recompensa: ${next} dias</small>`:'<br><small class="muted">Todos os marcos alcançados! 🏆</small>'}</div></div>`;
+}
+
+function characterHeaderHTML(){
+  const title=characterTitle(S.player.level);
+  return `<div class="today-hero char-hero"><div class="hero-grid">
+    <div>
+      <div class="badge gold">${title.icon} ${title.name.toUpperCase()} · NÍVEL ${S.player.level}</div>
+      <div class="hero-level">${fmt(S.player.xp)} XP</div>
+      <div class="hero-xp">${fmt(S.player.xp)} / ${fmt(S.player.maxXp)} XP para o próximo nível</div>
+      <div class="progress"><div class="fill" style="width:${pct(S.player.xp,S.player.maxXp)}%"></div></div>
+      <div class="hero-xp" style="margin-top:8px">📅 Hoje: <b class="green">+${fmt(S.dailyStats.xpEarned||0)} XP</b> · <b class="gold">+${fmt(S.dailyStats.coinsEarned||0)} 🪙</b> · <b>${fmt(xpPendingToday())} XP</b> disponível nas tarefas</div>
+      ${streakHeaderHTML()}
+    </div>
+    <div class="char-mini-avatar">${avatarSVG()}<div class="badge gold" style="margin-top:6px">🪙 ${fmt(S.player.coins)} Ouro</div></div>
+  </div></div>`;
+}
+
+function dailyProgressCardHTML(){
+  const p=daily();
+  const reward=calculateDailyReward(p);
+  const tierBadge = p>=100?'🏆 DIA PERFEITO':p>=90?'⭐ EXCELENTE':p>=80?'✅ DIA CONCLUÍDO':'🎯 EM ANDAMENTO';
+  const claimed = S.player.dailyRewardClaimed && S.player.dailyRewardDate===today();
+  return `<div class="card daily-progress-card"><div class="row"><h3>🎯 Progresso de Hoje</h3><span class="badge gold">${p}%</span></div>
+  <div class="progress" style="height:16px;margin-top:10px"><div class="fill ${p>=80?'green':''}" style="width:${p}%"></div></div>
+  <div class="row" style="margin-top:12px"><b>${tierBadge}</b>${p>=80?`<span class="gold">+${reward.xp} XP · +${reward.coins} 🪙</span>`:''}</div>
+  ${claimed?'<p class="muted" style="font-size:.78rem;margin-top:6px">✅ Recompensa de hoje já garantida.</p>':p<80?`<p class="muted" style="font-size:.78rem;margin-top:6px">Faltam ${80-p}% para garantir a recompensa mínima.</p>`:''}</div>`;
+}
+
+/* ===================== DIFICULDADE / DANO / TÍTULOS ===================== */
+const DIFFICULTY={
+  facil:   {label:'Fácil',   icon:'🟢', color:'#34d399', xp:20,  dmg:5},
+  normal:  {label:'Normal',  icon:'🔵', color:'#60a5fa', xp:40,  dmg:10},
+  dificil: {label:'Difícil', icon:'🟣', color:'#c084fc', xp:70,  dmg:20},
+  epica:   {label:'Épica',   icon:'🔴', color:'#f87171', xp:120, dmg:35}
+};
+const HABIT_DMG=3; // dano fixo de hábitos/rotinas (higiene, faculdade, casa, hábitos diários)
+const STREAK_MILESTONES=[3,7,14,30,60,100];
+
+function characterTitle(level){
+  if(level>=100) return {icon:'🐉',name:'Lendário'};
+  if(level>=75)  return {icon:'👑',name:'Mestre'};
+  if(level>=50)  return {icon:'⚔️',name:'Elite'};
+  if(level>=25)  return {icon:'🛡️',name:'Guerreiro'};
+  if(level>=10)  return {icon:'⚔️',name:'Aventureiro'};
+  return {icon:'🧑',name:'Novato'};
+}
+
+function nextTitleHint(level){
+  const thresholds=[[10,'Aventureiro'],[25,'Guerreiro'],[50,'Elite'],[75,'Mestre'],[100,'Lendário']];
+  const next=thresholds.find(([lvl])=>lvl>level);
+  return next ? `Faltam ${next[0]-level} níveis para se tornar ${next[1]}.` : 'Você alcançou o nível máximo de evolução do personagem!';
+}
+
+function nextStreakMilestone(streak){
+  return STREAK_MILESTONES.find(m=>m>streak) || null;
+}
+
+function streakDots(streak){
+  const next = nextStreakMilestone(streak) || (streak+1);
+  const total = Math.min(next, 20); // no máximo 20 pontos visíveis, pra não estourar em telas pequenas
+  const filled = Math.min(streak, total);
+  return '●'.repeat(filled) + '○'.repeat(Math.max(0,total-filled));
+}
+
+function ensureTaskDefaults(state){
+  ['tasks','quests'].forEach(k=>{
+    if(!Array.isArray(state[k])) return;
+    state[k].forEach(x=>{
+      if(!x.difficulty || !DIFFICULTY[x.difficulty]) x.difficulty='normal';
+      if(typeof x.dmg!=='number') x.dmg=DIFFICULTY[x.difficulty].dmg;
+    });
+  });
+  return state;
+}
+
+let lastBossHitFlash=false;
+function dealBossDamage(dmg){
+  if(!dmg) return;
+  if(typeof S.boss.hp!=='number') S.boss.hp=S.boss.maxHp||1000;
+  S.boss.hp=Math.max(0,S.boss.hp-dmg);
+  lastBossHitFlash=true;
+}
+
+function combatToast({label='MISSÃO CONCLUÍDA!',xp=0,coins=0,dmg=0}={}){
+  const c=document.getElementById('toast');
+  if(!c) return;
+  const lines=[
+    xp?`<span class="ct-xp">+${xp} XP</span>`:'',
+    coins?`<span class="ct-coins">+${coins} 🪙</span>`:'',
+    dmg?`<span class="ct-dmg">⚔️ -${dmg} HP no Boss</span>`:''
+  ].filter(Boolean).join(' ');
+  c.innerHTML=`<div class="toast combat-toast"><b>✅ ${esc(label)}</b><span>${lines}</span></div>`;
+  setTimeout(()=>{ if(c.innerHTML.includes('combat-toast')) c.innerHTML=''; },2200);
+}
+
 function attrBlock(){return `<div class="card"><h3>⚔️ ATRIBUTOS DO PERSONAGEM</h3>${Object.entries(attrNames).map(([k,v])=>`<div class="attr"><div><div class="row"><span class="attr-name">${v[0]} ${v[1]}</span></div><div class="progress"><div class="fill gold" style="width:${S.attributes[k]}%"></div></div></div><div class="attr-value">${S.attributes[k]}</div></div>`).join('')}</div>`}
 function baseHeader(t,s){return `<div class="header"><div class="title">${t}</div><div class="subtitle">${s}</div></div>`}
 
@@ -750,7 +1117,9 @@ avatar:()=>{
   <div class="grid" style="grid-template-columns:280px 1fr;gap:20px;align-items:start">
     <div class="card" style="text-align:center">
       ${avatarSVG()}
-      <div class="badge gold" style="margin-top:10px">Nível ${S.player.level} · Tier ${tier.name}</div>
+      <h3 style="margin-top:12px">${characterTitle(S.player.level).icon} ${characterTitle(S.player.level).name}</h3>
+      <div class="badge gold" style="margin-top:6px">Nível ${S.player.level} · Tier ${tier.name}</div>
+      <p class="muted" style="font-size:.74rem;margin-top:8px">${nextTitleHint(S.player.level)}</p>
       <div class="list" style="margin-top:16px;text-align:left">${equippedRows}</div>
     </div>
     <div>
@@ -783,21 +1152,42 @@ menagerie:()=>{
   <div class="card" style="margin-top:20px"><h3>🥚 Próximos marcos</h3><div class="list" style="margin-top:12px">${lockedMilestones}</div></div>`;
 },
 today:()=>`${baseHeader('🏠 Hoje','Seu centro de comando. Tudo que importa hoje em um único lugar.')}
-<div class="today-hero"><div class="hero-grid"><div><div class="badge gold">⚔️ NÍVEL ${S.player.level}</div><div class="hero-level">${fmt(S.player.xp)} XP</div><div class="hero-xp">${fmt(S.player.xp)} / ${fmt(S.player.maxXp)} XP para o próximo nível</div><div class="progress"><div class="fill" style="width:${pct(S.player.xp,S.player.maxXp)}%"></div></div></div><div class="priority"><b>🎯 PRIORIDADES DE HOJE</b>${S.tasks.filter(x=>!x.done).slice(0,4).map(x=>`<div>${esc(x.category)} — ${esc(x.name)}</div>`).join('')||'<div>🏆 Todas as prioridades concluídas!</div>'}</div></div><div class="stat-mini"><div class="mini"><span class="label">🔥 Streak</span><strong class="gold">${S.player.streak} dias</strong></div><div class="mini"><span class="label">⚡ Progresso</span><strong class="green">${daily()}%</strong></div><div class="mini"><span class="label">✨ XP hoje</span><strong>${xpToday()}</strong></div><div class="mini"><span class="label">🪙 Ouro</span><strong class="gold">${fmt(S.player.coins)}</strong></div></div></div>
-<div class="grid"><div class="card"><h3>📋 Tarefas de hoje</h3><div class="list" style="margin-top:12px">${S.tasks.map((x)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-task="${x.id}" ${x.done?'checked':''}><span class="${x.done?'done':''}">${esc(x.name)} <small class="muted">(+${x.xp} XP · ${attrNames[x.attr]?attrNames[x.attr][1]:x.attr})</small></span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" aria-label="Renomear item" title="Renomear" onclick="renameListItem('tasks','${x.id}','today')">✏️</button><button type="button" class="btn" style="padding:4px 8px" aria-label="Remover item" title="Remover" onclick="deleteListItem('tasks','${x.id}','today')">🗑️</button></span></div>`).join('')||'<div class="empty">Nenhuma tarefa hoje. Adicione uma abaixo.</div>'}</div>
-<div class="form" style="margin-top:14px"><div class="field"><label>Nova tarefa</label><input id="newTaskName" maxlength="60" placeholder="Ex: Enviar relatório"></div><div class="field"><label>Categoria</label><select id="newTaskCat"><option>Faculdade</option><option>Trabalho</option><option>Concurso</option><option>Leitura</option><option>Pessoal</option></select></div><div class="field"><label>Atributo que evolui</label><select id="newTaskAttr">${Object.entries(attrNames).map(([k,v])=>`<option value="${k}">${v[1]}</option>`).join('')}</select></div><div class="field"><label>XP</label><input id="newTaskXp" type="number" min="1" max="200" step="1" value="30"></div><button class="btn primary" id="addTaskBtn">Adicionar</button></div>
+${characterHeaderHTML()}
+<div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">${dailyProgressCardHTML()}${bossPreviewHTML()}</div>
+<div class="card" style="margin-top:18px"><div class="row"><h3>⚔️ MISSÕES DE HOJE</h3><button class="btn" onclick="render('quests')">Ver todas as missões →</button></div><div style="margin-top:12px">${priorityMissionsHTML(4)}</div></div>
+<div class="grid" style="margin-top:18px"><div class="card"><h3>📋 Tarefas de hoje</h3><div class="list" style="margin-top:12px">${S.tasks.map((x)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-task="${x.id}" ${x.done?'checked':''}><span class="${x.done?'done':''}">${difficultyBadge(x)} ${esc(x.name)} <small class="muted">(+${x.xp} XP · ⚔️${x.dmg||10} · ${attrNames[x.attr]?attrNames[x.attr][1]:x.attr})</small></span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" aria-label="Renomear item" title="Renomear" onclick="renameListItem('tasks','${x.id}','today')">✏️</button><button type="button" class="btn" style="padding:4px 8px" aria-label="Remover item" title="Remover" onclick="deleteListItem('tasks','${x.id}','today')">🗑️</button></span></div>`).join('')||'<div class="empty">Nenhuma tarefa hoje. Adicione uma abaixo.</div>'}</div>
+<div class="form" style="margin-top:14px"><div class="field"><label>Nova tarefa</label><input id="newTaskName" maxlength="60" placeholder="Ex: Enviar relatório"></div><div class="field"><label>Categoria</label><select id="newTaskCat"><option>Faculdade</option><option>Trabalho</option><option>Concurso</option><option>Leitura</option><option>Pessoal</option></select></div><div class="field"><label>Atributo que evolui</label><select id="newTaskAttr">${Object.entries(attrNames).map(([k,v])=>`<option value="${k}">${v[1]}</option>`).join('')}</select></div><div class="field"><label>Dificuldade</label><select id="newTaskDiff">${Object.entries(DIFFICULTY).map(([k,v])=>`<option value="${k}" ${k==='normal'?'selected':''}>${v.icon} ${v.label}</option>`).join('')}</select></div><div class="field"><label>XP</label><input id="newTaskXp" type="number" min="1" max="200" step="1" value="30"></div><button class="btn primary" id="addTaskBtn">Adicionar</button></div>
 </div>${attrBlock()}</div>
 <div class="grid" style="margin-top:18px"><div class="card"><h3>📈 Semana</h3><div class="value">${weekAvg()}%</div><div class="label">média dos últimos 7 dias</div><div class="progress"><div class="fill green" style="width:${weekAvg()}%"></div></div></div><div class="card"><h3>📅 Mês</h3><div class="value">${monthAvg()}%</div><div class="label">média dos registros do mês</div><div class="progress"><div class="fill gold" style="width:${monthAvg()}%"></div></div></div></div>`,
-dashboard:()=>`${baseHeader('📊 Dashboard','Visão estratégica da sua evolução.')}
-<div class="grid"><div class="card"><span class="label">Nível</span><div class="value red">${S.player.level}</div></div><div class="card"><span class="label">XP total disponível</span><div class="value">${fmt(S.player.xp)}</div></div><div class="card"><span class="label">🔥 Streak atual</span><div class="value gold">${S.player.streak}</div></div><div class="card"><span class="label">🏆 Recorde</span><div class="value gold">${S.player.bestStreak}</div></div><div class="card"><span class="label">Dias ≥80%</span><div class="value green">${S.player.total80Days}</div></div><div class="card"><span class="label">Dias perfeitos</span><div class="value green">${S.player.totalPerfectDays}</div></div></div>
+dashboard:()=>`${baseHeader('📊 Dashboard','Seu quartel-general. Visão estratégica da sua evolução.')}
+${characterHeaderHTML()}
+<div class="card" style="margin-top:18px"><div class="row"><h3>⚔️ MISSÕES DE HOJE</h3><button class="btn" onclick="render('quests')">Ver todas as missões →</button></div><div style="margin-top:12px">${priorityMissionsHTML(4)}</div></div>
+<div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">${dailyProgressCardHTML()}${bossPreviewHTML()}</div>
+<div class="grid" style="margin-top:18px"><div class="card"><span class="label">🏆 Recorde de streak</span><div class="value gold">${S.player.bestStreak}</div></div><div class="card"><span class="label">Dias ≥80%</span><div class="value green">${S.player.total80Days}</div></div><div class="card"><span class="label">Dias perfeitos</span><div class="value green">${S.player.totalPerfectDays}</div></div><div class="card"><span class="label">👹 Bosses derrotados</span><div class="value red">${S.player.bossDefeats||0}</div></div></div>
 <div class="grid" style="margin-top:18px;grid-template-columns:200px 1fr"><div class="card" style="text-align:center">${avatarSVG()}<div class="badge gold" style="margin-top:8px">Tier ${tierFromLevel(S.player.level).name}</div></div><div class="card"><h3>🐾 Companheiros ativos</h3>${S.pets.filter(p=>p.active).length?`<div class="list" style="margin-top:10px">${S.pets.filter(p=>p.active).map(p=>`<div class="row" style="padding:6px 0"><span>${p.emoji} ${esc(p.name)} · Nv.${p.level}</span><b style="color:${PET_RARITY_COLOR[p.rarity]}">+${petBuffValue(p).toFixed(1)}%</b></div>`).join('')}</div>`:'<p class="muted" style="font-size:.82rem;margin-top:8px">Nenhum companheiro ativo. Visite o Estábulo para ativar um e ganhar bônus passivo.</p>'}<p class="muted" style="font-size:.78rem;margin-top:10px">Bônus total: +${petBuffPct('gold').toFixed(1)}% Ouro · +${petBuffPct('xp').toFixed(1)}% XP geral</p></div></div>
 <div class="grid" style="margin-top:18px">${attrBlock()}<div class="card"><h3>🔥 Streak & consistência</h3><div class="value gold">${S.player.streak} dias</div><p class="muted" style="font-size:.8rem;margin-top:7px">Recorde: ${S.player.bestStreak} dias</p><p class="muted" style="font-size:.8rem">Dias ≥80%: ${S.player.total80Days}</p><p class="muted" style="font-size:.8rem">Dias perfeitos: ${S.player.totalPerfectDays}</p><p class="muted" style="font-size:.8rem">Último dia qualificado: ${S.player.lastQualifiedDay||'—'}</p></div></div>
 <div class="card" style="margin-top:18px"><h3>📅 Consistência — últimos 30 dias</h3>${calendar()}</div>
 <div class="card" style="margin-top:18px"><h3>📜 Histórico</h3>${historyTable()}</div>`,
-quests:()=>`${baseHeader('🎯 Missões','Tarefas, projetos e objetivos que geram XP e atributos.')}
-<div class="card"><div class="form"><div class="field"><label>Missão</label><input id="newQuest" maxlength="60" placeholder="Ex: finalizar relatório"></div><div class="field"><label>Categoria</label><select id="questCat"><option>Faculdade</option><option>Trabalho</option><option>Concurso</option><option>Projeto</option><option>Pessoal</option></select></div><div class="field"><label>Atributo que evolui</label><select id="questAttr">${Object.entries(attrNames).map(([k,v])=>`<option value="${k}">${v[1]}</option>`).join('')}</select></div><div class="field"><label>XP</label><input id="questXp" type="number" min="1" max="500" step="1" value="50"></div><button class="btn primary" id="addQuest">Adicionar</button></div></div>
-<div class="card" style="margin-top:18px"><div class="list">${S.quests.map((x)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-quest="${x.id}" ${x.done?'checked':''}><span class="${x.done?'done':''}"><b>${esc(x.name)}</b> <small class="muted">${esc(x.category)} · +${x.xp} XP · ${attrNames[x.attr]?attrNames[x.attr][1]:x.attr}</small></span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" aria-label="Renomear item" title="Renomear" onclick="renameListItem('quests','${x.id}','quests')">✏️</button><button type="button" class="btn" style="padding:4px 8px" aria-label="Remover item" title="Remover" onclick="deleteListItem('quests','${x.id}','quests')">🗑️</button></span></div>`).join('')||'<div class="empty">Nenhuma missão personalizada.</div>'}</div></div>
-<div class="boss" style="margin-top:20px">${bossView()}</div>`,
+boss:()=>{
+  let hp=typeof S.boss.hp==='number'?S.boss.hp:(S.boss.maxHp||1000);
+  let maxHp=S.boss.maxHp||1000;
+  let hpPct=pct(hp,maxHp);
+  let done=S.boss.items.filter(x=>x.done).length,cp=pct(done,S.boss.items.length);
+  const flash = lastBossHitFlash;
+  lastBossHitFlash=false; // a animação só toca no render imediatamente após o dano
+  return `${baseHeader('👹 Boss do Mês','Suas missões causam dano de verdade. Enfraqueça-o até derrotá-lo.')}
+  <div class="card boss-arena ${flash?'boss-hit':''}">
+    <div class="row"><div><div class="badge gold">👹 CHEFE DA SEMANA</div><h2 style="margin-top:9px">O Destruidor da Procrastinação</h2><p class="muted" style="margin-top:6px">${bossFlavorText(hpPct)}</p></div><div class="boss-hp-big">${hpPct}%</div></div>
+    <div class="progress boss-hp-bar"><div class="fill" style="width:${hpPct}%"></div></div>
+    <div class="row" style="margin-top:10px"><small class="muted">💢 HP: ${fmt(hp)} / ${fmt(maxHp)}</small><small class="muted">Dano causado até agora: ${fmt(maxHp-hp)}</small></div>
+    <div class="card" style="margin-top:20px;background:rgba(0,0,0,.2)"><h3>📜 Checklist semanal (${cp}%)</h3><div class="progress" style="margin-top:8px"><div class="fill gold" style="width:${cp}%"></div></div><div class="boss-tasks" style="margin-top:15px">${S.boss.items.map((x,i)=>`<label class="boss-task"><input type="checkbox" data-boss="${i}" ${x.done?'checked':''}> ${x.name}</label>`).join('')}</div>${cp===100&&!S.boss.bonusClaimed?'<button class="btn primary" id="claimBoss" style="margin-top:15px">🏆 Derrotar Boss — +500 XP / +1.000 Ouro</button>':''}</div>
+    <p class="muted" style="font-size:.78rem;margin-top:14px">⚔️ Toda tarefa, hábito e missão concluída causa dano automaticamente. O checklist acima é o golpe final que garante a recompensa.</p>
+  </div>`;
+},
+quests:()=>`${baseHeader('🎯 Missões','Tarefas, projetos e objetivos que geram XP, atributos e dano ao Boss.')}
+<div class="card"><div class="form"><div class="field"><label>Missão</label><input id="newQuest" maxlength="60" placeholder="Ex: finalizar relatório"></div><div class="field"><label>Categoria</label><select id="questCat"><option>Faculdade</option><option>Trabalho</option><option>Concurso</option><option>Projeto</option><option>Pessoal</option></select></div><div class="field"><label>Atributo que evolui</label><select id="questAttr">${Object.entries(attrNames).map(([k,v])=>`<option value="${k}">${v[1]}</option>`).join('')}</select></div><div class="field"><label>Dificuldade</label><select id="questDiff">${Object.entries(DIFFICULTY).map(([k,v])=>`<option value="${k}" ${k==='normal'?'selected':''}>${v.icon} ${v.label}</option>`).join('')}</select></div><div class="field"><label>XP</label><input id="questXp" type="number" min="1" max="500" step="1" value="50"></div><button class="btn primary" id="addQuest">Adicionar</button></div></div>
+<div class="card" style="margin-top:18px"><div class="list">${S.quests.map((x)=>`<div class="task" style="justify-content:space-between"><label style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer"><input type="checkbox" data-quest="${x.id}" ${x.done?'checked':''}><span class="${x.done?'done':''}">${difficultyBadge(x)} <b>${esc(x.name)}</b> <small class="muted">${esc(x.category)} · +${x.xp} XP · ⚔️${x.dmg||10} · ${attrNames[x.attr]?attrNames[x.attr][1]:x.attr}</small></span></label><span style="display:flex;gap:6px;flex-shrink:0"><button type="button" class="btn" style="padding:4px 8px" aria-label="Renomear item" title="Renomear" onclick="renameListItem('quests','${x.id}','quests')">✏️</button><button type="button" class="btn" style="padding:4px 8px" aria-label="Remover item" title="Remover" onclick="deleteListItem('quests','${x.id}','quests')">🗑️</button></span></div>`).join('')||'<div class="empty">Nenhuma missão personalizada.</div>'}</div></div>
+${bossPreviewHTML()}`,
 habits:()=>`${baseHeader('🔄 Hábitos','Rotina diária focada em consistência, não perfeição.')}
 ${checklistSection('hygiene','hygiene','Rotina de Higiene','🧼','habits',true)}
 ${checklistSection('college','college','Rotina da Faculdade & Redação','🎓','habits',true)}
@@ -814,21 +1204,56 @@ store:()=>`${baseHeader('🛒 Loja de Elite','Troque Ouro RPG por recompensas.')
 
 function money(n){return Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function historyProgress(v){return typeof v==='object'&&v!==null?Number(v.progress||0):Number(v||0)}
-function historyXP(v){return typeof v==='object'&&v!==null?Number(v.xp||0):0}
-function historyCoins(v){return typeof v==='object'&&v!==null?Number(v.coins||0):0}
+function historyXP(v){return typeof v==='object'&&v!==null?Number(v.xpEarned??v.xp??0):0}
+function historyCoins(v){return typeof v==='object'&&v!==null?Number(v.coinsEarned??v.coins??0):0}
+function daysAgo(dateKey){
+  const parts=String(dateKey||'').split('-').map(Number);
+  if(parts.length!==3 || parts.some(n=>Number.isNaN(n))) return Infinity;
+  const [y,m,d]=parts;
+  const dayUTC=Date.UTC(y,m-1,d,12,0,0);
+  return Math.floor((Date.now()-dayUTC)/86400000);
+}
 function weekAvg(){return avg(Object.entries(S.history||{}).filter(([d])=>daysAgo(d)<7).map(x=>historyProgress(x[1])))}
-function monthAvg(){let n=new Date();return avg(Object.entries(S.history||{}).filter(([d])=>{let x=new Date(d+'T12:00:00');return x.getFullYear()===n.getFullYear()&&x.getMonth()===n.getMonth()}).map(x=>historyProgress(x[1])))}
+function monthAvg(){
+  const [ny,nm]=today().split('-'); // today() já é fixo em horário de Brasília.
+  const prefix=`${ny}-${nm}`;
+  return avg(Object.entries(S.history||{}).filter(([d])=>d.startsWith(prefix)).map(x=>historyProgress(x[1])));
+}
 function avg(a){return a.length?Math.round(a.reduce((x,y)=>x+Number(y),0)/a.length):0}
-function daysAgo(d){return Math.floor((new Date()-new Date(d+'T12:00:00'))/86400000)}
+function dateKeyMinusDays(n){
+  const [y,m,d]=today().split('-').map(Number);
+  const anchor=new Date(Date.UTC(y,m-1,d,12,0,0));
+  anchor.setUTCDate(anchor.getUTCDate()-n);
+  return `${anchor.getUTCFullYear()}-${String(anchor.getUTCMonth()+1).padStart(2,'0')}-${String(anchor.getUTCDate()).padStart(2,'0')}`;
+}
+function calendar(){let out='<div class="calendar">'+['D','S','T','Q','Q','S','S'].map(x=>`<div class="dow">${x}</div>`).join('');for(let i=29;i>=0;i--){let k=dateKeyMinusDays(i),v=historyProgress(S.history[k]),tier=calculateDailyReward(v).tier;let cls=tier==='perfect'?'perfect':tier==='excellent'?'perfect':tier==='complete'?'good':v>0?'bad':'';out+=`<div class="day ${cls}" title="${k}: ${v}%">${v||''}</div>`}return out+'</div>'}
+function historyTable(){
+  let a=Object.entries(S.history||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,365);
+  if(!a.length)return '<div class="empty">Ainda não há histórico.</div>';
+  return '<div class="history-list">'+a.map(([date,value],i)=>{
+    let p=historyProgress(value),xp=historyXP(value),coins=historyCoins(value);
+    let hasLedger = typeof value==='object' && value && value.startXp!==undefined && value.endXp!==undefined;
+    let progressionBlock = hasLedger
+      ? `<div><span>📈 XP no dia</span><strong>${fmt(value.startXp)} → ${fmt(value.endXp)}</strong></div><div><span>🏅 Nível</span><strong>${value.startLevel===value.endLevel?value.endLevel:`${value.startLevel} → ${value.endLevel}`}</strong></div>`
+      : `<div><span>📈 Detalhamento</span><strong class="muted">Sem dados detalhados</strong></div>`;
+    return `<details class="history-day" ${i===0?'open':''}><summary><b>${date}</b><strong>${p}%</strong><span>${p>=100?'🏆 Perfeito':p>=80?'✅ Qualificado':'—'}</span></summary><div class="history-day-content"><div class="history-stats"><div><span>⭐ XP ganho</span><strong>+${fmt(xp)}</strong></div><div><span>🪙 Gold ganho</span><strong>+${fmt(coins)}</strong></div><div><span>📊 Progresso</span><strong>${p}%</strong></div>${progressionBlock}</div>${historyTaskDetails(value)}</div></details>`;
+  }).join('')+'</div>';
+}
 function historyTaskDetails(v){let t=v?.tasks;if(!t)return '<div class="muted">Registro antigo sem detalhamento das tarefas.</div>';let groups=[['🧼 Higiene',t.hygiene],['🎓 Faculdade',t.college],['🏠 Casa',t.houseTasks],['🔄 Hábitos',t.habits],['🎯 Tarefas',t.tasks],['🥗 Nutrição',t.nutrition],['⚔️ Missões',t.quests]].filter(x=>Array.isArray(x[1])&&x[1].length);return '<div class="history-task-groups">'+groups.map(([name,list])=>'<div class="history-task-group"><h4>'+name+'</h4>'+list.map(x=>{let done=!!(x.completed||x.done);return '<div class="history-task '+(done?'':'pending')+'">'+(done?'✅':'❌')+' '+esc(x.name||'Tarefa')+'</div>'}).join('')+'</div>').join('')+'</div>'}
-function calendar(){let out='<div class="calendar">'+['D','S','T','Q','Q','S','S'].map(x=>`<div class="dow">${x}</div>`).join('');for(let i=29;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let k=d.toISOString().slice(0,10),v=historyProgress(S.history[k]),tier=calculateDailyReward(v).tier;let cls=tier==='perfect'?'perfect':tier==='excellent'?'perfect':tier==='complete'?'good':v>0?'bad':'';out+=`<div class="day ${cls}" title="${k}: ${v}%">${v||''}</div>`}return out+'</div>'}
-function historyTable(){let a=Object.entries(S.history||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,365);if(!a.length)return '<div class="empty">Ainda não há histórico.</div>';return '<div class="history-list">'+a.map(([date,value],i)=>{let p=historyProgress(value),xp=historyXP(value),coins=historyCoins(value);return `<details class="history-day" ${i===0?'open':''}><summary><b>${date}</b><strong>${p}%</strong><span>${p>=100?'🏆 Perfeito':p>=80?'✅ Qualificado':'—'}</span></summary><div class="history-day-content"><div class="history-stats"><div><span>⭐ XP</span><strong>+${fmt(xp)}</strong></div><div><span>🪙 Gold</span><strong>${fmt(coins)}</strong></div><div><span>📊 Progresso</span><strong>${p}%</strong></div><div><span>👤 Nível</span><strong>${typeof value==='object'&&value?value.level:'—'}</strong></div></div>${historyTaskDetails(value)}</div></details>`}).join('')+'</div>'}
 function historyView(){let a=Object.entries(S.history||{}),xp=a.reduce((s,[,v])=>s+historyXP(v),0),coins=a.reduce((s,[,v])=>s+historyCoins(v),0),perfect=a.filter(([,v])=>historyProgress(v)>=100).length;return `${baseHeader('📜 Histórico','Seu diário de evolução, salvo na nuvem.')}<div class="grid"><div class="card"><span class="label">Dias registrados</span><div class="value">${a.length}</div></div><div class="card"><span class="label">Dias perfeitos</span><div class="value gold">${perfect}</div></div><div class="card"><span class="label">XP registrado</span><div class="value">${fmt(xp)}</div></div><div class="card"><span class="label">Gold registrado</span><div class="value gold">${fmt(coins)}</div></div></div><div class="card" style="margin-top:18px"><h3>📖 Diário de evolução</h3><p class="muted" style="font-size:.75rem;margin-top:4px">Os nomes de tarefas/hábitos/missões abaixo refletem como cada item se chamava no dia registrado — renomear um item hoje não altera os registros já arquivados.</p><div style="margin-top:15px">${historyTable()}</div></div>`}
 
-function bossView(){let done=S.boss.items.filter(x=>x.done).length,p=pct(done,S.boss.items.length);return `<div class="row"><div><div class="badge gold">👹 BOSS DA SEMANA</div><h2 style="margin-top:9px">O Destruidor da Procrastinação</h2></div><div class="boss-hp">${p}%</div></div><div class="progress"><div class="fill gold" style="width:${p}%"></div></div><div class="boss-tasks">${S.boss.items.map((x,i)=>`<label class="boss-task"><input type="checkbox" data-boss="${i}" ${x.done?'checked':''}> ${x.name}</label>`).join('')}</div>${p===100&&!S.boss.bonusClaimed?'<button class="btn primary" id="claimBoss" style="margin-top:15px">🏆 Derrotar Boss — +500 XP / +1.000 Ouro</button>':''}`}
-
-function showAuth(mode='login',message=''){const o=document.getElementById('authOverlay');o.style.display='flex';o.innerHTML=`<div class="auth-box"><h1>⚔️ ELITEDASH</h1><p>${mode==='login'?'Entre para carregar seu personagem da nuvem.':'Crie sua conta para salvar seu progresso online.'}</p><input id="authEmail" type="email" placeholder="E-mail"><input id="authPassword" type="password" placeholder="Senha"><button class="btn primary" id="authSubmit">${mode==='login'?'Entrar':'Criar conta'}</button><div class="auth-msg">${message}</div><div class="auth-switch"><button id="authToggle">${mode==='login'?'Criar minha conta':'Já tenho uma conta'}</button></div></div>`;document.getElementById('authSubmit').onclick=async()=>{let email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password)return showAuth(mode,'Preencha e-mail e senha.');let r=mode==='login'?await supabaseClient.auth.signInWithPassword({email,password}):await supabaseClient.auth.signUp({email,password});if(r.error)return showAuth(mode,r.error.message);if(mode==='login'){currentUser=r.data.user;await loadCloud();checkDailyReset();render('today');o.style.display='none';setupLogoutButton();}else{showAuth('login','Conta criada. Se o Supabase pedir confirmação por e-mail, confirme e depois entre.')}};document.getElementById('authToggle').onclick=()=>showAuth(mode==='login'?'signup':'login')}
-async function logout(){await supabaseClient.auth.signOut();currentUser=null;showAuth('login','Você saiu da conta.');}
+function showAuth(mode='login',message=''){const o=document.getElementById('authOverlay');o.style.display='flex';o.innerHTML=`<div class="auth-box"><h1>⚔️ ELITEDASH</h1><p>${mode==='login'?'Entre para carregar seu personagem da nuvem.':'Crie sua conta para salvar seu progresso online.'}</p><input id="authEmail" type="email" placeholder="E-mail"><input id="authPassword" type="password" placeholder="Senha"><button class="btn primary" id="authSubmit">${mode==='login'?'Entrar':'Criar conta'}</button><div class="auth-msg">${message}</div><div class="auth-switch"><button id="authToggle">${mode==='login'?'Criar minha conta':'Já tenho uma conta'}</button></div></div>`;document.getElementById('authSubmit').onclick=async()=>{let email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;if(!email||!password)return showAuth(mode,'Preencha e-mail e senha.');let r=mode==='login'?await supabaseClient.auth.signInWithPassword({email,password}):await supabaseClient.auth.signUp({email,password});if(r.error)return showAuth(mode,r.error.message);if(mode==='login'){currentUser=r.data.user;await loadCloud();checkDailyReset();checkWeeklyReset();checkPetUnlocks();render('today');o.style.display='none';}else{showAuth('login','Conta criada. Se o Supabase pedir confirmação por e-mail, confirme e depois entre.')}};document.getElementById('authToggle').onclick=()=>showAuth(mode==='login'?'signup':'login')}
+async function logout(){
+  await supabaseClient.auth.signOut();
+  clearTimeout(cloudSaveTimer);
+  currentUser=null;
+  lastKnownCloudUpdatedAt=null;
+  // Limpa o estado EM MEMÓRIA (não mexe no Supabase nem no localStorage do usuário
+  // que acabou de sair) para impedir que, se outra conta fizer login nesta mesma aba
+  // sem recarregar a página, ela herde os dados do usuário anterior.
+  S=clone(defaultState);
+  showAuth('login','Você saiu da conta.');
+}
 
 function render(tabName='today'){
   nav(tabName);
@@ -843,7 +1268,11 @@ function bind(){
  let x=S.tasks.find(t=>t.id===e.dataset.task);
  if(!x) return;
  x.done=e.checked;
- if(x.done) petXpGain(4);
+ if(x.done){
+   petXpGain(4);
+   dealBossDamage(x.dmg||DIFFICULTY.normal.dmg);
+   combatToast({label:'Tarefa concluída!',xp:x.xp,dmg:x.dmg||DIFFICULTY.normal.dmg});
+ }
  streakUpdate();
  save();
  render('today');
@@ -852,7 +1281,11 @@ function bind(){
  let x=S.habits.find(t=>t.id===e.dataset.habit);
  if(!x) return;
  x.completed=e.checked;
- if(x.completed) petXpGain(3);
+ if(x.completed){
+   petXpGain(3);
+   dealBossDamage(HABIT_DMG);
+   combatToast({label:'Hábito concluído!',xp:x.xp,dmg:HABIT_DMG});
+ }
  streakUpdate();
  save();
  render('habits');
@@ -861,7 +1294,11 @@ function bind(){
  let x=S.hygiene.find(t=>t.id===e.dataset.hygiene);
  if(!x) return;
  x.completed=e.checked;
- if(x.completed) petXpGain(2);
+ if(x.completed){
+   petXpGain(2);
+   dealBossDamage(HABIT_DMG);
+   combatToast({label:'Rotina concluída!',xp:x.xp,dmg:HABIT_DMG});
+ }
  streakUpdate();
  save();
  render('habits');
@@ -870,7 +1307,11 @@ function bind(){
  let x=S.college.find(t=>t.id===e.dataset.college);
  if(!x) return;
  x.completed=e.checked;
- if(x.completed) petXpGain(3);
+ if(x.completed){
+   petXpGain(3);
+   dealBossDamage(HABIT_DMG);
+   combatToast({label:'Rotina concluída!',xp:x.xp,dmg:HABIT_DMG});
+ }
  streakUpdate();
  save();
  render('habits');
@@ -879,7 +1320,11 @@ function bind(){
  let x=S.houseTasks.find(t=>t.id===e.dataset.housetask);
  if(!x) return;
  x.completed=e.checked;
- if(x.completed) petXpGain(2);
+ if(x.completed){
+   petXpGain(2);
+   dealBossDamage(HABIT_DMG);
+   combatToast({label:'Rotina concluída!',xp:x.xp,dmg:HABIT_DMG});
+ }
  streakUpdate();
  save();
  render('habits');
@@ -888,7 +1333,11 @@ function bind(){
  let x=S.nutrition.find(t=>t.id===e.dataset.nutrition);
  if(!x) return;
  x.completed=e.checked;
- if(x.completed) petXpGain(2);
+ if(x.completed){
+   petXpGain(2);
+   dealBossDamage(HABIT_DMG);
+   combatToast({label:'Nutrição em dia!',dmg:HABIT_DMG});
+ }
  streakUpdate();
  save();
  render('nutrition');
@@ -897,12 +1346,16 @@ function bind(){
  let x=S.quests.find(t=>t.id===e.dataset.quest);
  if(!x) return;
  x.done=e.checked;
- if(x.done) petXpGain(5);
+ if(x.done){
+   petXpGain(5);
+   dealBossDamage(x.dmg||DIFFICULTY.normal.dmg);
+   combatToast({label:'Missão concluída!',xp:x.xp,dmg:x.dmg||DIFFICULTY.normal.dmg});
+ }
  save();
  render('quests');
 });
- const addQ=document.getElementById('addQuest');if(addQ)addQ.onclick=()=>{let n=document.getElementById('newQuest').value.trim().slice(0,60);if(!n)return;let cat=document.getElementById('questCat').value;let attr=document.getElementById('questAttr').value;S.quests.push({id:uid('q'),name:n,category:cat,xp:Number(document.getElementById('questXp').value)||50,attr,done:false});save();render('quests')};
- const addT=document.getElementById('addTaskBtn');if(addT)addT.onclick=()=>{let n=document.getElementById('newTaskName').value.trim().slice(0,60);if(!n)return;let cat=document.getElementById('newTaskCat').value;let attr=document.getElementById('newTaskAttr').value;S.tasks.push({id:uid('t'),name:n,category:cat,attr,xp:Number(document.getElementById('newTaskXp').value)||30,done:false});save();render('today')};
+ const addQ=document.getElementById('addQuest');if(addQ)addQ.onclick=()=>{let n=document.getElementById('newQuest').value.trim().slice(0,60);if(!n)return;let cat=document.getElementById('questCat').value;let attr=document.getElementById('questAttr').value;let diff=document.getElementById('questDiff').value;S.quests.push({id:uid('q'),name:n,category:cat,xp:Number(document.getElementById('questXp').value)||50,attr,difficulty:diff,dmg:DIFFICULTY[diff]?.dmg||10,done:false});save();render('quests')};
+ const addT=document.getElementById('addTaskBtn');if(addT)addT.onclick=()=>{let n=document.getElementById('newTaskName').value.trim().slice(0,60);if(!n)return;let cat=document.getElementById('newTaskCat').value;let attr=document.getElementById('newTaskAttr').value;let diff=document.getElementById('newTaskDiff').value;S.tasks.push({id:uid('t'),name:n,category:cat,attr,difficulty:diff,dmg:DIFFICULTY[diff]?.dmg||10,xp:Number(document.getElementById('newTaskXp').value)||30,done:false});save();render('today')};
  document.querySelectorAll('[data-addlist]').forEach(e=>e.onclick=()=>{
    const listKey = e.dataset.addlist;
    const tab = e.dataset.addtab || 'habits';
@@ -937,8 +1390,8 @@ function bind(){
    render('avatar');
    toast(`⚔️ ${item.name} adquirido!`);
  });
- document.querySelectorAll('[data-boss]').forEach(e=>e.onchange=()=>{S.boss.items[e.dataset.boss].done=e.checked;save();render('quests')});
- const cb=document.getElementById('claimBoss');if(cb)cb.onclick=()=>{if(S.boss.items.every(x=>x.done)&&!S.boss.bonusClaimed){S.boss.bonusClaimed=true;S.player.bossDefeats=(S.player.bossDefeats||0)+1;xpGain(500,'discipline');addGold(1000);S.trophies.push('Destruidor da Procrastinação');grantBossEquipment();checkPetUnlocks();save();render('quests');toast('BOSS DERROTADO! +500 XP +1.000 Ouro')}};
+ document.querySelectorAll('[data-boss]').forEach(e=>e.onchange=()=>{S.boss.items[e.dataset.boss].done=e.checked;save();render('boss')});
+ const cb=document.getElementById('claimBoss');if(cb)cb.onclick=()=>{if(S.boss.items.every(x=>x.done)&&!S.boss.bonusClaimed){S.boss.bonusClaimed=true;S.player.bossDefeats=(S.player.bossDefeats||0)+1;xpGain(500,'discipline');addGold(1000);S.trophies.push('Destruidor da Procrastinação');grantBossEquipment();checkPetUnlocks();save();render('boss');toast('BOSS DERROTADO! +500 XP +1.000 Ouro')}};
 }
 function toast(msg){let c=document.getElementById('toast');c.innerHTML=`<div class="toast"><b>Honra Conquistada</b><span>${msg}</span></div>`;setTimeout(()=>c.innerHTML='',3500)}
 
@@ -951,7 +1404,6 @@ function toast(msg){let c=document.getElementById('toast');c.innerHTML=`<div cla
   checkWeeklyReset();
   checkPetUnlocks();
   render(location.hash.slice(1) && views[location.hash.slice(1)] ? location.hash.slice(1) : 'today');
-  setupLogoutButton();
 })();
 
 window.addEventListener('hashchange', ()=>{
@@ -971,8 +1423,7 @@ document.addEventListener('keydown', (e)=>{
 });
 
 // O botão de logout único vive dentro do menu lateral (nav()), que já chama
-// logout() diretamente. Nenhum botão flutuante duplicado é mais necessário.
-function setupLogoutButton(){}
+// logout() diretamente.
 </script>
 </body>
 </html>
